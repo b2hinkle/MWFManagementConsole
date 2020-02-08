@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "Servers";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">
+                Action
+            </th>
+            <th scope="col">
+                Server IP (Give to UE4 Clients)
+            </th>
+            <th scope="col">
+                Server IP (IP to ServerManagementAPI)
+            </th>
+            <th scope="col">
+                Port
+            </th>
+            <th scope="col">
+                Current # of Instances
+            </th>
+            <th scope="col">
+                Max # of Instances
+            </th>
+            <th scope="col">
+                Active/Inactive
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(int i = 0; i < 6; i++)
+        {
+            <tr>
+                <td>edit</td>
+                <td>Otto</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>Mark</td>
+            </tr>
+        }
+    </tbody>
+</table>
