@@ -11,9 +11,9 @@ namespace WebApplication.Controllers
     {
         public IActionResult Index()
         {
-            ServerModel ServModel = new ServerModel();      //not sure yet if this is the best way to make a model for the view
+            ServerModel Server = new ServerModel();      //not sure yet if this is the best way to make a model for the view
 
-            return View(ServModel);
+            return View(Server);
         }
 
         public IActionResult AddServer()
@@ -23,9 +23,9 @@ namespace WebApplication.Controllers
 
         public IActionResult Refresh()
         {
-            ServerModel ServModel = new ServerModel();      //not sure yet if this is the best way to make a model for the view
+            ServerModel Server = new ServerModel();      //not sure yet if this is the best way to make a model for the view
 
-            return View("Index", ServModel);
+            return View("Index", Server);
         }
 
         public IActionResult Edit()
