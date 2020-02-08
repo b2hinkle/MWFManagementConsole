@@ -1,4 +1,5 @@
 ﻿
+@model WebApplication.Models.ServerModel
 @{
     ViewData["Title"] = "Servers";
 }
@@ -18,10 +19,10 @@
                     Action
                 </th>
                 <th scope="col">
-                    Server IP (Give to UE4 Clients)
+                    GameServer IP (Give to UE4 Clients)
                 </th>
                 <th scope="col">
-                    Server IP (IP to ServerManagementAPI)
+                    Server Management IP (IP to ServerManagementAPI)
                 </th>
                 <th scope="col">
                     Port
@@ -44,12 +45,12 @@
                     <td>
                         <a asp-controller="Servers" asp-action="Edit">edit</a>
                     </td>
-                    <td>Otto</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>Mark</td>
+                    <td>@Model.GameServerIP</td>
+                    <td>@Model.ServerManagementIP</td>
+                    <td>@Model.Port</td>
+                    <td>@Model.CurrentInstances</td>
+                    <td>@Model.MaxInstances</td>
+                    <td>@Model.IsActive</td>
                 </tr>
             }
         </tbody>
