@@ -12,5 +12,20 @@ namespace WebApplication.Controllers
         {
             return View();
         }
+
+        public IActionResult AddServer()
+        {
+            return View();
+        }
+
+        public IActionResult Refresh()
+        {
+            return View("Index");
+        }
+
+        public IActionResult Edit()
+        {
+            return View();
+        }
     }
 }

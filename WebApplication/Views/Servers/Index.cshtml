@@ -6,8 +6,8 @@
 <h1>@ViewData["Title"]</h1>
 
 <div class="col-md-2 float-right">
-    <a class="btn btn-primary" asp-controller="Home" asp-action="About">Add Server</a>
-    <a class="btn btn-light" asp-controller="Home" asp-action="About">Refresh</a>
+    <a class="btn btn-primary" asp-controller="Servers" asp-action="AddServer">Add Server</a>
+    <a class="btn btn-light" asp-controller="Servers" asp-action="Refresh">Refresh</a>
 </div>
 
 <div>
@@ -42,7 +42,7 @@
             {
                 <tr>
                     <td>
-                        <a asp-controller="Home" asp-action="About">edit</a>
+                        <a asp-controller="Servers" asp-action="Edit">edit</a>
                     </td>
                     <td>Otto</td>
                     <td>Mark</td>
