@@ -1,58 +1,65 @@
-﻿
-@model WebApplication.Models.ServerModel
+﻿@model IEnumerable<DataLibrary.Models.ServerModel>
+
 @{
-    ViewData["Title"] = "Servers";
+    ViewData["Title"] = "Index";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Index</h1>
 
 <div class="col-md-2 float-right">
     <a class="btn btn-primary" asp-controller="Servers" asp-action="AddServer">Add Server</a>
     <a class="btn btn-light" asp-controller="Servers" asp-action="Refresh">Refresh</a>
 </div>
-
-<div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">
-                    Action
-                </th>
-                <th scope="col">
-                    GameServer IP (Give to UE4 Clients)
-                </th>
-                <th scope="col">
-                    Server Management IP (IP to ServerManagementAPI)
-                </th>
-                <th scope="col">
-                    Port
-                </th>
-                <th scope="col">
-                    Current # of Instances
-                </th>
-                <th scope="col">
-                    Max # of Instances
-                </th>
-                <th scope="col">
-                    Active/Inactive
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < 6; i++)
-            {
-                @*<tr>
-                    <td>
-                        <a asp-controller="Servers" asp-action="Edit">edit</a>
-                    </td>
-                    <td>@Model.GameServerIP</td>
-                    <td>@Model.ServerManagementIP</td>
-                    <td>@Model.Port</td>
-                    <td>@Model.CurrentInstances</td>
-                    <td>@Model.MaxInstances</td>
-                    <td>@Model.IsActive</td>
-                </tr>*@
-            }
-        </tbody>
-    </table>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServerIP)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameInstancesManagementApiIp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameInstancesManagementApiPort)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServerIP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameInstancesManagementApiIp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameInstancesManagementApiPort)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                <form asp-controller="Servers" asp-action="EditServer" method="post">
+                    <input type="hidden" name="serverIP" value="@item.ServerIP" />
+                    <button type="submit" name="button">Edit</button>
+                </form>
+                <form asp-controller="Servers" asp-action="Delete" method="post">
+                    <input type="hidden" name="serverIP" value="@item.ServerIP" />
+                    <button type="submit" name="button">Delete</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

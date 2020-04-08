@@ -24,12 +24,13 @@ namespace DataLibrary.DataAccess
             }
         }
 
-        public static int SaveData<T>(string sql, T data, string connString)
+        public static int ModifyDatabase<T>(string sql, T data, string connString)
         {
             using (IDbConnection cnn = new SqlConnection(connString))
             {
                 return cnn.Execute(sql, data);
             }
         }
+
     }
 }

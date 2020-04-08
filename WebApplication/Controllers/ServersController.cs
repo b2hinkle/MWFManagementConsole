@@ -20,9 +20,9 @@ namespace WebApplication.Controllers
 
         public IActionResult Index()
         {
-            //ServerModel Server = new ServerModel();      //not sure yet if this is the best way to make a model for the view
+            List<DataLibrary.Models.ServerModel> Servers = LoadServers(_connectionStringsOptions.ServersBackendDB);
 
-            return View();
+            return View(Servers);
         }
 
         public IActionResult AddServer()
@@ -49,14 +49,30 @@ namespace WebApplication.Controllers
 
         public IActionResult Refresh()
         {
-            //ServerModel Server = new ServerModel();      //not sure yet if this is the best way to make a model for the view
+            List<DataLibrary.Models.ServerModel> Servers = LoadServers(_connectionStringsOptions.ServersBackendDB);
 
-            return View("Index");
+            return View("Index", Servers);
         }
 
-        public IActionResult Edit()
+        public IActionResult EditServer()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(string serverIP)
+        {
+            if (ModelState.IsValid)
+            {
+                int recordsDeleted = RemoveServer(serverIP, _connectionStringsOptions.ServersBackendDB);
+
+            }
+            
+
+
+            List<DataLibrary.Models.ServerModel> Servers = LoadServers(_connectionStringsOptions.ServersBackendDB);
+            return View("Index", Servers);
         }
     }
 }

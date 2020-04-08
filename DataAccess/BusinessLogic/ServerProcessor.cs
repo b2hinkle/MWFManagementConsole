@@ -20,13 +20,23 @@ namespace DataLibrary.BusinessLogic
 
             string sql = @"insert into dbo.ServerTable (ServerIP, GameInstancesManagementApiIp, GameInstancesManagementApiPort, IsActive)
                          values (@ServerIP, @GameInstancesManagementApiIp, @GameInstancesManagementApiPort, @IsActive);";
-            return SqlDataAccess.SaveData(sql, data, connString);
+            return SqlDataAccess.ModifyDatabase(sql, data, connString);
+        }
+
+        public static int RemoveServer(string serverIP, string connString)
+        {
+            ServerModel data = new ServerModel
+            {
+                ServerIP = serverIP
+            };
+
+            string sql = @"DELETE FROM dbo.ServerTable WHERE ServerIP=@ServerIP;";
+            return SqlDataAccess.ModifyDatabase(sql, data, connString);
         }
 
         public static List<ServerModel> LoadServers(string connString)
         {
-            string sql = @"select Id, ServerIP, GameInstancesManagementApiIp, GameInstancesManagementApiPort, IsActive
-                            from dbo.ServerTable;";
+            string sql = @"select * from dbo.ServerTable;";
 
             return SqlDataAccess.LoadData<ServerModel>(sql, connString);
         }
