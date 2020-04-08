@@ -1,7 +1,48 @@
-﻿
+﻿@model WebApplication.Models.ServerModel
+
 @{
     ViewData["Title"] = "AddServer";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>AddServer</h1>
+<hr />
 
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddServer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ServerIP" class="control-label"></label>
+                <input asp-for="ServerIP" class="form-control" />
+                <span asp-validation-for="ServerIP" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameInstancesManagementApiIp" class="control-label"></label>
+                <input asp-for="GameInstancesManagementApiIp" class="form-control" />
+                <span asp-validation-for="GameInstancesManagementApiIp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameInstancesManagementApiPort" class="control-label"></label>
+                <input asp-for="GameInstancesManagementApiPort" class="form-control" />
+                <span asp-validation-for="GameInstancesManagementApiPort" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="7e01c765-aef1-474b-bed1-051bf8fef635" ChangeDateTime="04/07/2020 15:44:33">
+    <Property Name="ElementName" Value="[dbo].[ServerTable].[GamesManagementApiIp]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ServerTable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GameInstancesManagementApiIp" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f3a1616e-8cc9-4c2f-90ba-0adad2feb69c" ChangeDateTime="04/07/2020 15:44:39">
+    <Property Name="ElementName" Value="[dbo].[ServerTable].[ManagementAPIPort]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ServerTable]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GameInstancesManagementApiPort" />
+  </Operation>
+</Operations>

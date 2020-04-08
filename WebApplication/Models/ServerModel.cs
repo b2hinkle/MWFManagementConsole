@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,21 +8,24 @@ namespace WebApplication.Models
 {
     public class ServerModel
     {
-        public string GameServerIP { get; set; }
-        public string ServerManagementIP { get; set; }
-        public int Port { get; set; }
-        public int CurrentInstances { get; set; }
-        public int MaxInstances { get; set; }
-        public bool IsActive { get; set; }
+        [Display(Name = "Server IP (This is given to UE4 Clients)")]
+        [Required(ErrorMessage = "Required field")]
+        [StringLength(39, MinimumLength = 11, ErrorMessage = "Characters must be in the range 11-39")]
+        public string ServerIP { get; set; }
 
-        public ServerModel()                                //Temporary (for simulation of data in a database)
-        {
-            GameServerIP = "127.0.0.1";
-            ServerManagementIP = "127.0.0.1";
-            Port = 80;
-            CurrentInstances = 2;
-            MaxInstances = 5;
-            IsActive = true;
-        }
+        [Display(Name = "Games Management API IP (If duel NIC card setup this will be different than the last IP)")]
+        [Required(ErrorMessage = "Required field")]
+        [StringLength(39, MinimumLength = 11, ErrorMessage = "Amount of characters must be in the range 11-39")]
+        public string GameInstancesManagementApiIp { get; set; }
+
+        [Display(Name = "Management API Port")]
+        [Required(ErrorMessage = "Required field")]
+        [StringLength(5, MinimumLength = 1, ErrorMessage = "Amount of characters must be in the range 1-5")]
+        public string GameInstancesManagementApiPort { get; set; }
+
+ 
+
+        [Required(ErrorMessage = "Required field")]
+        public bool IsActive { get; set; }
     }
 }
