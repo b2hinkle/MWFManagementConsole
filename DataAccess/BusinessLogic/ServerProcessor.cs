@@ -10,7 +10,7 @@ namespace DataLibrary.BusinessLogic
     {
         public static int CreateServer(string serverIP, string gameInstancesManagementApiIp, string gameInstancesManagementApiPort, bool isActive, string connString)
         {
-            ServerModel data = new ServerModel
+            var data = new
             {
                 ServerIP = serverIP,
                 GameInstancesManagementApiIp = gameInstancesManagementApiIp,
@@ -25,19 +25,13 @@ namespace DataLibrary.BusinessLogic
 
         public static int RemoveServer(string serverIP, string connString)
         {
-            ServerModel data = new ServerModel
-            {
-                ServerIP = serverIP
-            };
-
             string sql = @"DELETE FROM dbo.ServerTable WHERE ServerIP=@ServerIP;";
-            return SqlDataAccess.ModifyDatabase(sql, data, connString);
+            return SqlDataAccess.ModifyDatabase(sql, new { ServerIP = serverIP }, connString);
         }
 
         public static List<ServerModel> LoadServers(string connString)
         {
             string sql = @"select * from dbo.ServerTable;";
-
             return SqlDataAccess.LoadData<ServerModel>(sql, connString);
         }
     }

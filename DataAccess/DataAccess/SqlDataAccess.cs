@@ -10,12 +10,6 @@ namespace DataLibrary.DataAccess
 {
     public static class SqlDataAccess
     {
-        //public static string GetConnectionString(string connectionName = "ServersBackendDB")
-        //{
-        //    string s = ConfigurationManager.AppSettings["Data/DefaultConnection/ConnectionString"];
-        //    return ConfigurationManager.AppSettings["ConnectionString"];
-        //}
-
         public static List<T> LoadData<T>(string sql, string connString)
         {
             using (IDbConnection cnn = new SqlConnection(connString))
