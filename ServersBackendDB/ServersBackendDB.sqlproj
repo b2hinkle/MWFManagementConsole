@@ -63,6 +63,7 @@
   <ItemGroup>
     <Build Include="dbo\Tables\ServerTable.sql" />
     <Build Include="dbo\Tables\GameInstanceTable.sql" />
+    <Build Include="dbo\Tables\GameTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publish Profiles\ServersBackendDB.publish.xml" />

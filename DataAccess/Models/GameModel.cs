@@ -7,13 +7,12 @@ namespace DataLibrary.Models
     public class GameModel
     {
         public int Id { get; set; }
-        public string ServerIP { get; set; }
+        public string Name { get; set; }
 
-        public string GameInstancesManagementApiIp { get; set; }
+        public string Game { get; set; }
 
-        public string GameInstancesManagementApiPort { get; set; }
+        public string Map { get; set; }
 
-
-        public bool IsActive { get; set; }
+        public int MaxPlayers { get; set; }
     }
 }

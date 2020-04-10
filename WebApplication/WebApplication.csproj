@@ -18,8 +18,4 @@
     <ProjectReference Include="..\DataAccess\DataLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Games\" />
-  </ItemGroup>
-
 </Project>

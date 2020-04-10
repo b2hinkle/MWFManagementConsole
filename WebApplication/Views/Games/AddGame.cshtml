@@ -1,0 +1,70 @@
+﻿@model WebApplication.Models.GameModel
+
+@{
+    ViewData["Title"] = "AddGame";
+}
+
+<h1>AddGame</h1>
+<hr />
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddGame">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game" class="control-label"></label>
+                <input asp-for="Game" oninput="UpdateArgs()" class="form-control" />
+                <span asp-validation-for="Game" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Map" class="control-label"></label>
+                <input asp-for="Map" oninput="UpdateArgs()" class="form-control" />
+                <span asp-validation-for="Map" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxPlayers" class="control-label"></label>
+                <input asp-for="MaxPlayers" class="form-control" />
+                <span asp-validation-for="MaxPlayers" class="text-danger"></span>
+            </div>
+            <div class="col-md-12" style="background-color:#e8e8e8">
+                <p id="argsTitle"></p>
+                <div style="background-color:#414141; border-radius:4px;">
+                    <p id="args" style="color:#e8e8e8; font-size:small"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="AddGame" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+@*Deal with this properly*@
+<script>
+    function UpdateArgs() {
+        var game = document.getElementById("Game").value;
+        var map = document.getElementById("Map").value;
+        document.getElementById("argsTitle").innerHTML = "terminal representation: ";
+        document.getElementById("args").innerHTML = "> " + game + "Server.exe " + "&lt;GeneratedFilePath&gt;/" + map;
+    }
+</script>
+@*Deal with this properly*@
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
