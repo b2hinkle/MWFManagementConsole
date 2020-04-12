@@ -8,18 +8,18 @@ namespace DataLibrary.BusinessLogic
 {
     public static class GameProcessor
     {
-        public static int CreateGame(string name, string game, string map, int maxPlayers, string connString)
+        public static int CreateGame(string name, string game, string map, string args, string connString)
         {
             var data = new
             {
                 Name = name,
                 Game = game,
                 Map = map,
-                MaxPlayers = maxPlayers
+                Args = args
             };
 
-            string sql = @"insert into dbo.GameTable (Name, Game, Map, MaxPlayers)
-                         values (@Name, @Game, @Map, @MaxPlayers);";
+            string sql = @"insert into dbo.GameTable (Name, Game, Map, Args)
+                         values (@Name, @Game, @Map, @Args);";
             return SqlDataAccess.ModifyDatabase(sql, data, connString);
         }
 

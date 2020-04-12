@@ -8,42 +8,63 @@
 <hr />
 
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddGame">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Game" class="control-label"></label>
-                <input asp-for="Game" oninput="UpdateArgs()" class="form-control" />
-                <span asp-validation-for="Game" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Map" class="control-label"></label>
-                <input asp-for="Map" oninput="UpdateArgs()" class="form-control" />
-                <span asp-validation-for="Map" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaxPlayers" class="control-label"></label>
-                <input asp-for="MaxPlayers" class="form-control" />
-                <span asp-validation-for="MaxPlayers" class="text-danger"></span>
-            </div>
-            <div class="col-md-12" style="background-color:#e8e8e8">
-                <p id="argsTitle"></p>
-                <div style="background-color:#414141; border-radius:4px;">
-                    <p id="args" style="color:#e8e8e8; font-size:small"></p>
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="AddGame" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="AddGame">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label asp-for="Name" class="control-label offset-3"></label>
+            <input asp-for="Name" class="form-control text-center" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Game" class="control-label"></label>
+            <input asp-for="Game" oninput="OnEditCommonArg(this)" class="form-control" />
+            <span asp-validation-for="Game" class="text-danger"></span>
+        </div>
     </div>
-</div>
+    <hr />
+    <h2>Argument Builder</h2>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label asp-for="Map" class="control-label"></label>
+            <input asp-for="Map" oninput="OnEditCommonArg(this)" class="form-control" />
+            <span asp-validation-for="Map" class="text-danger"></span>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div id="EditButton" class="col-md-1 text-center" style="background-color:#e8e8e8; border:2px solid #cecece;" onmousedown="MouseDownEditButton()">Enable Editing</div>
+        <div class="col-md-10" style="background-color:#e8e8e8;">
+            <label asp-for="Args" class="control-label"></label>
+            <input asp-for="Args" class="form-control" oninput="OnEditArgs(this)" readonly />
+            <span asp-validation-for="Args" class="text-danger"></span>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div id="unset" class="col-md-1" style="font-size:12px; background-color:#6582b7; border-radius:10px; border:1px solid #7b8790;" onmousedown="MouseDownOnBooleanArg(this)">
+            -log
+        </div>
+        <div id="unset" class="col-md-1" style="font-size:12px; background-color:#6582b7; border-radius:10px; border:1px solid #7b8790;" onmousedown="MouseDownOnBooleanArg(this)">
+            -nosteam
+        </div>
+        <div id="unset" class="col-md-1" style="font-size:12px; background-color:#6582b7; border-radius:10px; border:1px solid #7b8790;" onmousedown="MouseDownOnBooleanArg(this)">
+            -listen
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group offset-6 col-md-12">
+            <input type="submit" value="AddGame" class="btn btn-primary" />
+        </div>
+    </div>
+
+
+
+
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -51,20 +72,11 @@
 
 
 
-@*Deal with this properly*@
-<script>
-    function UpdateArgs() {
-        var game = document.getElementById("Game").value;
-        var map = document.getElementById("Map").value;
-        document.getElementById("argsTitle").innerHTML = "terminal representation: ";
-        document.getElementById("args").innerHTML = "> " + game + "Server.exe " + "&lt;GeneratedFilePath&gt;/" + map;
-    }
-</script>
-@*Deal with this properly*@
 
 
 
 @section Scripts {
+    <script src="~/js/ShowTerminalPreview.js"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 

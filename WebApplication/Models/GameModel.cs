@@ -21,9 +21,6 @@ namespace WebApplication.Models
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Amount of characters must be in the range 1-5")]
         public string Map { get; set; }
 
- 
-
-        [Required(ErrorMessage = "Required field")]
-        public int MaxPlayers { get; set; }
+        public string Args { get; set; }
     }
 }

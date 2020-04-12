@@ -26,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.Map)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaxPlayers)
+                @Html.DisplayNameFor(model => model.Args)
             </th>
             <th></th>
         </tr>
@@ -46,8 +46,8 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Map)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaxPlayers)
+            <td style="font-size:9px">
+                @Html.DisplayFor(modelItem => item.Args)
             </td>
             <td>
                 <form asp-controller="Games" asp-action="EditGame" method="post">

@@ -12,7 +12,8 @@ namespace DataLibrary.Models
         public string Game { get; set; }
 
         public string Map { get; set; }
+        public string Args { get; set; }
 
-        public int MaxPlayers { get; set; }
+
     }
 }

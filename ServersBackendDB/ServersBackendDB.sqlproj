@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Publish Profiles\ServersBackendDB.publish.xml" />
+    <None Include="ServersBackendDB.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="ServersBackendDB.refactorlog" />

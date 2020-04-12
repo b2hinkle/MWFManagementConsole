@@ -39,7 +39,7 @@ namespace WebApplication.Controllers
                 int recordsCreated = CreateGame(NewGame.Name,
                     NewGame.Game,
                     NewGame.Map,
-                    NewGame.MaxPlayers,
+                    NewGame.Args,
                     _connectionStringsOptions.ServersBackendDB);
                 return RedirectToAction("Index");
             }
