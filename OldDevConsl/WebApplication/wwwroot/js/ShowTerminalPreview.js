@@ -28,6 +28,16 @@ function OnEditCommonArg(e) {
 function OnEditArgs(e) {
     if (e.id == "Args") {
         editedRawArgsString = true;
+        var regexArr = e.value.match(/<GeneratedUMapPath>\S+/);
+        if (regexArr != null) {
+            map = regexArr[0].replace("<GeneratedUMapPath>", "");
+        }
+        else {
+            map = "";
+
+        }
+
+        
     }
     AllLeadToThisFunction(e);
 }
@@ -37,14 +47,12 @@ function MouseDownOnBooleanArg(e) {
     argToBeAdded = space.concat(e.innerHTML.trim());
 
     if (e.id == "unset") {
-        e.style.setProperty("background-color", "#2acbf7");
-        e.id = "set";
+        SetBooleanArg(e, true);
 
         shouldAddToArgArr = true;
     }
     else {
-        e.style.setProperty("background-color", "#5c77a9");
-        e.id = "unset";
+        SetBooleanArg(e, false);
 
         shouldAddToArgArr = false;
     }
@@ -53,6 +61,18 @@ function MouseDownOnBooleanArg(e) {
 
     
     AllLeadToThisFunction(e);
+}
+
+function SetBooleanArg(e, newSet) {
+    if (newSet == true) {
+        e.style.setProperty("background-color", "#2acbf7");
+        e.id = "set";
+    }
+    else {
+        e.style.setProperty("background-color", "#5c77a9");
+        e.id = "unset";
+    }
+    
 }
 
 
@@ -69,7 +89,10 @@ function UpdateFinalArgsStringGivenCurrentInformation(e) {   //constructing the 
             var mapArg = generatedUMapPath.concat(map);
             finalArgsString = finalArgsString.concat(mapArg);       //1st append map arg
         }
-        
+        else {
+            finalArgsString = finalArgsString.replace("<GeneratedUMapPath>", "");   //if there is no map name in common field delete <GeneratedUMapPath>
+            
+        }
 
         if (shouldAddToArgArr) {
             let newLength = argsToBeAddedArr.push(argToBeAdded);
@@ -88,22 +111,43 @@ function UpdateFinalArgsStringGivenCurrentInformation(e) {   //constructing the 
         }
     }
     else {
-        finalArgsString = e.value;
+        let transientArgsString = e.value;
+        if (map == "") {
+            finalArgsString = finalArgsString.replace("<GeneratedUMapPath>", "");   //if there is no map name when they typed in the argsString delete <GeneratedUMapPath>
+        }
+        else
+
+        finalArgsString = transientArgsString;
     }
-    
+
 }
 
 function UpdateFormValues(e) {
-    document.getElementById("Args").value = finalArgsString;    //set args form value to what weve come up with
+
+    
+
 
     //Do string parsing so that we can get the map name based off of what they typed and each option argument that they typed in an array. Then we'll have all info needed to fill in the form values
     if (editedRawArgsString) {
-        var argsArr = finalArgsString.match(/\s-([\S]+)/);
-        for (let i = 0; i < argsArr.length; i++) {
+        var currentArgsArr = finalArgsString.match(/ -\S+/g);
+        for (let i = 0; i < argsToBeAddedArr.length; i++) {
+            if (currentArgsArr.includes(argsToBeAddedArr[i])) {     //exesting arg exists in the new gathered args
 
-
+            }
+            else {                                                  //we lost an exesting arg
+                var divs = document.getElementsByTagName("DIV");
+                for (let j = 0; j < divs.length; j++) {
+                    var buttonTxt = divs[j].innerText;
+                    if (argsToBeAddedArr[i] == buttonTxt) {
+                        SetBooleanArg(divs[j], false);
+                        break;
+                    }
+                }
+            }
         }
     }
+    document.getElementById("Map").value = map;
+    document.getElementById("Args").value = finalArgsString;    //set args form value to what weve come up with
 }
 
 function ResetGlobalVars() {
@@ -114,10 +158,6 @@ function ResetGlobalVars() {
     shouldAddToArgArr = false;
     editedRawArgsString = false;
 }
-
-
-
-
 
 
 
