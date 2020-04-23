@@ -1,0 +1,9 @@
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\bin\Debug\netstandard2.0\DeveloperConsoleLibrary.deps.json
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\bin\Debug\netstandard2.0\DeveloperConsoleLibrary.dll
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\bin\Debug\netstandard2.0\DeveloperConsoleLibrary.pdb
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\obj\Debug\netstandard2.0\DeveloperConsoleLibrary.csprojAssemblyReference.cache
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\obj\Debug\netstandard2.0\DeveloperConsoleLibrary.csproj.CoreCompileInputs.cache
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\obj\Debug\netstandard2.0\DeveloperConsoleLibrary.AssemblyInfoInputs.cache
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\obj\Debug\netstandard2.0\DeveloperConsoleLibrary.AssemblyInfo.cs
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\obj\Debug\netstandard2.0\DeveloperConsoleLibrary.dll
+C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DeveloperConsoleLibrary\obj\Debug\netstandard2.0\DeveloperConsoleLibrary.pdb
