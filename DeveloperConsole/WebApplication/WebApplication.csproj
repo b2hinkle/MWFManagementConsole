@@ -14,4 +14,8 @@
     <Folder Include="Views\Servers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\GameServicesPrivateAPI\GameServicesPrivateAPI\GameServicesDataLibrary\GameServicesDataLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

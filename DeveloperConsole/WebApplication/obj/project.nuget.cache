@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bxGSzrI8RHOtcdqMMHr3gh/3PpzzRj5Pg+0jZikA4at/0qcWuP9LqC01pIYqvtTaHv3A/v+wbdSd/LCk3dTKIQ==",
+  "dgSpecHash": "QLCb3APfRaryvvvuzDWxQ58RPg18v4JFdWrTNTqzKQuVzNMRj/JH+QVhBg3AP4SxTxEAA0+9EiBi9l3W4gbZvg==",
   "success": true,
   "projectFilePath": "C:\\Users\\b2hin\\Documents\\GitRepos\\DeveloperConsole\\DeveloperConsole\\WebApplication\\WebApplication.csproj",
   "expectedPackageFiles": [
@@ -110,7 +110,8 @@
     "C:\\Users\\b2hin\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.3\\system.threading.tasks.extensions.4.5.3.nupkg.sha512",
     "C:\\Users\\b2hin\\.nuget\\packages\\system.threading.timer\\4.3.0\\system.threading.timer.4.3.0.nupkg.sha512",
     "C:\\Users\\b2hin\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "C:\\Users\\b2hin\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512"
+    "C:\\Users\\b2hin\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\b2hin\\.nuget\\packages\\gameservicesdatalibrary\\1.0.0\\gameservicesdatalibrary.1.0.0.nupkg.sha512"
   ],
   "logs": []
 }

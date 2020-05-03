@@ -10,7 +10,9 @@ namespace WebApplication.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            List<GameServicesDataLibrary.Models.ServerModel> Servers = LoadServers(_connectionStringsOptions.ServersBackendDB);
+
+            return View(Servers);
         }
     }
 }
