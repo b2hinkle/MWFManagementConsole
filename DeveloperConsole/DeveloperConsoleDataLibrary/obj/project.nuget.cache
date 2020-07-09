@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pcOapK6dGegJ8YgKIkBXE2dFUO1ZJYp6ou9Mm2uK4ZKE2YQ6kWQR2dyTo5rreEGdloC0zfBRKx+0QMpcArxPAA==",
+  "dgSpecHash": "qQktAZInSqpRlhQewpkM55RGTukVZmSRtFCgoJpLfHt5yBO5GcidQx4mk/mf7I10TnfA8Ka1Rq3TAz3Q+k0f3Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\b2hin\\Documents\\GitRepos\\DeveloperConsole\\DeveloperConsole\\DeveloperConsoleDataLibrary\\DeveloperConsoleDataLibrary.csproj",
+  "projectFilePath": "C:\\Users\\b2hin\\Documents\\GitRepos\\MultiplayerManagementConsole\\DeveloperConsole\\DeveloperConsoleDataLibrary\\DeveloperConsoleDataLibrary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\b2hin\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\b2hin\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"

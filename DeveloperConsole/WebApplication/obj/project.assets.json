@@ -6083,17 +6083,21 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\b2hin\\.nuget\\packages\\": {}
+    "C:\\Users\\b2hin\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\b2hin\\Documents\\GitRepos\\DeveloperConsole\\DeveloperConsole\\WebApplication\\WebApplication.csproj",
+      "projectUniqueName": "C:\\Users\\b2hin\\Documents\\GitRepos\\MultiplayerManagementConsole\\DeveloperConsole\\WebApplication\\WebApplication.csproj",
       "projectName": "WebApplication",
-      "projectPath": "C:\\Users\\b2hin\\Documents\\GitRepos\\DeveloperConsole\\DeveloperConsole\\WebApplication\\WebApplication.csproj",
+      "projectPath": "C:\\Users\\b2hin\\Documents\\GitRepos\\MultiplayerManagementConsole\\DeveloperConsole\\WebApplication\\WebApplication.csproj",
       "packagesPath": "C:\\Users\\b2hin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\b2hin\\Documents\\GitRepos\\DeveloperConsole\\DeveloperConsole\\WebApplication\\obj\\",
+      "outputPath": "C:\\Users\\b2hin\\Documents\\GitRepos\\MultiplayerManagementConsole\\DeveloperConsole\\WebApplication\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
         "C:\\Users\\b2hin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -6146,7 +6150,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
       }
     }
   }
