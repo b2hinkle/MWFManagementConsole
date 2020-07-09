@@ -1,9 +1,0 @@
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\bin\Debug\netstandard2.0\DataLibrary.deps.json
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\bin\Debug\netstandard2.0\DataLibrary.dll
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\bin\Debug\netstandard2.0\DataLibrary.pdb
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\obj\Debug\netstandard2.0\DataLibrary.csprojAssemblyReference.cache
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\obj\Debug\netstandard2.0\DataLibrary.csproj.CoreCompileInputs.cache
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\obj\Debug\netstandard2.0\DataLibrary.AssemblyInfoInputs.cache
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\obj\Debug\netstandard2.0\DataLibrary.AssemblyInfo.cs
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\obj\Debug\netstandard2.0\DataLibrary.dll
-C:\Users\b2hin\Documents\GitRepos\DeveloperConsole\DeveloperConsole\DataLibrary\obj\Debug\netstandard2.0\DataLibrary.pdb
