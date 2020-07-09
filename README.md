@@ -1,2 +1,2 @@
-# DeveloperConsole
-Developer console that provides a GUI and allows you to modify/monitor the status of physical machine servers
+# MultiplayerManagementConsole
+Management console that provides a GUI allowing you to modify/monitor each server and its corresponding cluster.
