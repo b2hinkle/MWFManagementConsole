@@ -12,4 +12,10 @@
     <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="MWFModelsLibrary">
+      <HintPath>..\..\..\MultiplayerWebFramework\MultiplayerWebFramework\MWFModelsLibrary\bin\Debug\netstandard2.0\MWFModelsLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
