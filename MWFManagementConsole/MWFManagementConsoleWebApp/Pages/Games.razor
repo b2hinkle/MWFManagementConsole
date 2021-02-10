@@ -5,14 +5,14 @@
 
 @*<div class="col-md-3">*@
     <DataGrid TItem="GameInstanceModel"
-              Data="@gameInstanceList"
+              Data="@gameInstanceArr"
               ReadData="@OnReadData"
               TotalItems="@totalGameInstances">
         <DataGridCommandColumn TItem="GameInstanceModel" />
         <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Sortable="false" />
         <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Editable="true" />
         <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Editable="true" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.AssociatedHost)" Caption="AssociatedHost" Editable="true" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Editable="true" />
     </DataGrid>
 @*</div>*@
 
@@ -20,16 +20,16 @@
 
 @code 
 {
-    GameInstanceModel[] gameInstanceList;
+    GameInstanceModel[] gameInstanceArr;
     int totalGameInstances;
 
     async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
     {
         // this can be call to anything, in this case we're calling a fictional api
-        var response = await Http.GetFromJsonAsync<GameInstanceModel[]>($"some-api/employees?page={e.Page}&pageSize={e.PageSize}");
+        IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
 
-        gameInstanceList = response; // an actual data for the current page
-        totalGameInstances = response.Length; // this is used to tell datagrid how many items are available so that pagination will work
+        gameInstanceArr = response.ToArray(); // an actual data for the current page
+        totalGameInstances = gameInstanceArr.Length; // this is used to tell datagrid how many items are available so that pagination will work
 
         // always call StateHasChanged!
         StateHasChanged();
