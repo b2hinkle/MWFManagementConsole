@@ -3,29 +3,27 @@
 
 <h3>Games</h3>
 
-@*<div class="col-md-3">*@
-    <DataGrid TItem="GameInstanceModel"
-              Data="@gameInstanceArr"
-              ReadData="@OnReadData"
-              TotalItems="@totalGameInstances">
-        <DataGridCommandColumn TItem="GameInstanceModel" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Sortable="false" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Editable="true" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Editable="true" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Editable="true" />
-    </DataGrid>
-@*</div>*@
+<DataGrid TItem="GameInstanceModel"
+          Data="@gameInstanceArr"
+          ReadData="@OnReadData"
+          TotalItems="@totalGameInstances">
+    <DataGridCommandColumn TItem="GameInstanceModel" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Sortable="false" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Editable="true" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Editable="true" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Editable="true" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Editable="true" />
+</DataGrid>
 
 
 
-@code 
+@code
 {
     GameInstanceModel[] gameInstanceArr;
     int totalGameInstances;
 
     async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
     {
-        // this can be call to anything, in this case we're calling a fictional api
         IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
 
         gameInstanceArr = response.ToArray(); // an actual data for the current page
