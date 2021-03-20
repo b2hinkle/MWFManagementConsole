@@ -36,10 +36,6 @@ namespace MWFManagementConsoleWebApp
             /*await builder.Build().RunAsync();*/   // This was commented out because we need to first add servuces before we RunAsync()
             var host = builder.Build();
 
-            host.Services
-              .UseBootstrapProviders()
-              .UseFontAwesomeIcons();
-
             await host.RunAsync();
         }
     }
