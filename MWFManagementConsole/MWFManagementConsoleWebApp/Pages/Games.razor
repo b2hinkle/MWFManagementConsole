@@ -25,8 +25,7 @@
         <InputSelect @bind-Value="NewGameInstanceToAdd.Game" class="form-control">
             @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
             {
-                @*Value = j for now to show empty defualt value. It was an easy but bad solution so will come back later*@
-                <option value="j">@game.ToString()</option>
+                <option>@game.ToString()</option>
             }
         </InputSelect>
     </div>
