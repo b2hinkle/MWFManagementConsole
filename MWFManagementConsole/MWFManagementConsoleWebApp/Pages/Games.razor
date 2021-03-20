@@ -46,6 +46,12 @@
 
 @code
 {
+
+    protected override async Task OnInitializedAsync()
+    {
+        @*IEnumerable <GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"Get Hosts Endpoint");*@
+    }
+
     GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
     async Task CreateNewGameInstance()
     {
