@@ -1,27 +1,63 @@
 ﻿@page "/Games"
 @inject HttpClient Http
+@using System.Text.Json
 
-<h3>Games</h3>
+<h3>Game Instances</h3>
 
 <DataGrid TItem="GameInstanceModel"
           Data="@gameInstanceArr"
+          Sortable="true"
           ReadData="@OnReadData"
           TotalItems="@totalGameInstances">
     <DataGridCommandColumn TItem="GameInstanceModel" />
     <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Sortable="false" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Editable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Editable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Editable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Editable="true" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Sortable="true" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Sortable="true" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Sortable="true" />
+    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Sortable="true" />
 </DataGrid>
+
+@*Non Blazorise form*@
+<h3>Create Game Instance</h3>
+<EditForm Model="@NewGameInstanceToAdd" OnValidSubmit="CreateNewGameInstance">
+    <div class="form-group">
+        <label for="Game">Game</label>
+        <InputSelect @bind-Value="NewGameInstanceToAdd.Game" class="form-control">
+            @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
+            {
+                @*Value = j for now to show empty defualt value. It was an easy but bad solution so will come back later*@
+                <option value="j">@game.ToString()</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label for="Args">Args</label>
+        <InputText @bind-Value="NewGameInstanceToAdd.Args" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="HostId">HostId</label>
+        <InputNumber @bind-Value="NewGameInstanceToAdd.HostId" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
 
 
 
 @code
 {
+    GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
+    async Task CreateNewGameInstance()
+    {
+        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", NewGameInstanceToAdd, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        if (!result.IsSuccessStatusCode)
+        {
+
+        }
+    }
+
     GameInstanceModel[] gameInstanceArr;
     int totalGameInstances;
-
     async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
     {
         IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
