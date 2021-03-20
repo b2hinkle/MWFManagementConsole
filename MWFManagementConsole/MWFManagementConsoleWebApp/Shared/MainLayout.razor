@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+
+<div class="main">
+    @*Top bar*@
+    <Bar Breakpoint="Breakpoint.Desktop"
+         Background="Background.Light"
+         ThemeContrast="ThemeContrast.Light">
+        <BarBrand>
+            Management Console
+        </BarBrand>
+        <BarToggler />
+        <BarMenu>
+            <BarStart>
+                <BarItem>
+                    <BarLink To="/">Home</BarLink>
+                </BarItem>
+                <BarItem>
+                    <BarLink To="Hosts">Hosts</BarLink>
+                </BarItem>
+                <BarItem>
+                    <BarLink To="Games">Games</BarLink>
+                </BarItem>
+            </BarStart>
+            <BarEnd>
+                <BarItem>
+                    <BarLink To="About">About</BarLink>
+                </BarItem>
+            </BarEnd>
+        </BarMenu>
+    </Bar>
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
