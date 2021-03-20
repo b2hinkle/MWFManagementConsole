@@ -2,20 +2,29 @@
 @inject HttpClient Http
 @using System.Text.Json
 
-<h3>Game Instances</h3>
 
+
+<h3>Game Instances</h3>
+@if (gameInstanceArr == null)
+{
+    <p>Fetching data....</p>
+}
 <DataGrid TItem="GameInstanceModel"
           Data="@gameInstanceArr"
           Sortable="true"
           ReadData="@OnReadData"
           TotalItems="@totalGameInstances">
     <DataGridCommandColumn TItem="GameInstanceModel" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Sortable="false" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Sortable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Sortable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Sortable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Sortable="true" />
+    @if (gameInstanceArr != null)
+    {
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Sortable="false" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Sortable="true" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Sortable="true" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Sortable="true" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Sortable="true" />
+    }
 </DataGrid>
+
 
 @*Non Blazorise form*@
 <h3>Create Game Instance</h3>
