@@ -49,11 +49,24 @@
     <button type="submit" class="btn btn-primary">Create</button>
 </EditForm>
 
-
+<Snackbar @ref="snackbarSuccess" Color="SnackbarColor.Success">
+    <SnackbarBody>
+        New game instance running
+        <SnackbarAction Clicked="@(()=>snackbarSuccess.Hide())">CLOSE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
+<Snackbar @ref="snackbarFailure" Color="SnackbarColor.Danger">
+    <SnackbarBody>
+        Failed to create and run new game instance
+        <SnackbarAction Clicked="@(()=>snackbarFailure.Hide())">CLOSE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
 
 
 @code
 {
+    Snackbar snackbarSuccess;
+    Snackbar snackbarFailure;
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,10 +76,15 @@
     GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
     async Task CreateNewGameInstance()
     {
-        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", NewGameInstanceToAdd, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-        if (!result.IsSuccessStatusCode)
-        {
 
+        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", NewGameInstanceToAdd, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        if (result.IsSuccessStatusCode)
+        {
+            snackbarSuccess.Show();
+        }
+        else
+        {
+            snackbarFailure.Show();
         }
     }
 
