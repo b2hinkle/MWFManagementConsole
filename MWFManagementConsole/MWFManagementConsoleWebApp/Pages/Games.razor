@@ -77,6 +77,8 @@
     GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
     async Task CreateNewGameInstance()
     {
+        snackbarSuccess.Hide();
+        snackbarFailure.Hide();
         isSubmitting = true;
         var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", NewGameInstanceToAdd, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         isSubmitting = false;
