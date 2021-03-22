@@ -37,8 +37,12 @@
                 <option>@game.ToString()</option>
             }
         </InputSelect>
+    </div>
+    <div class="form-group">
         <label>Args</label>
         <InputText @bind-Value="NewGameInstanceToAdd.Args" class="form-control" />
+    </div>
+    <div class="form-group">
         <label>HostId</label>
         <InputNumber @bind-Value="NewGameInstanceToAdd.HostId" class="form-control" />
     </div>
