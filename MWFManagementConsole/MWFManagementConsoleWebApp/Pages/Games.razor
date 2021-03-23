@@ -25,6 +25,34 @@
     }
 </DataGrid>
 
+@*Blazorise Form*@
+@*<h3>Create Game Instance</h3>
+<Fields>
+    <Field ColumnSize="ColumnSize.Is4.OnDesktop">
+        <FieldLabel>Game</FieldLabel>
+        <Select TValue="int" Placeholder="SelectOne">
+            @{ 
+                var gameNamesArr = Enum.GetNames(typeof(MWFModelsLibrary.Enums.Game));
+                int enumSize = gameNamesArr.Length;
+
+                Console.WriteLine("names arr length = " + gameNamesArr.Length);
+                for (int i = 0; i < enumSize; i++)
+                {
+                    Console.WriteLine("i = " + i);
+                    <SelectItem Value=2>@gameNamesArr[i]</SelectItem>
+                }
+            }
+        </Select>
+    </Field>
+    <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+        <FieldLabel>HostId</FieldLabel>
+        <TextEdit />
+    </Field>
+    <Field ColumnSize="ColumnSize.Is2.OnDesktop">
+        <FieldLabel>Args</FieldLabel>
+        <TextEdit />
+    </Field>
+</Fields>*@
 
 @*Non Blazorise form*@
 <h3>Create Game Instance</h3>
