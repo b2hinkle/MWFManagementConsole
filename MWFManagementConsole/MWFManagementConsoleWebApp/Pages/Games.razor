@@ -4,78 +4,109 @@
 
 
 
-<h3>Game Instances</h3>
+@*<h3>Game Instances</h3>
 @if (gameInstanceArr == null)
 {
     <p>Fetching data....</p>
-}
+}*@
+
+
+
 <DataGrid TItem="GameInstanceModel"
+          @ref="dataGrid"
           Data="@gameInstanceArr"
-          Sortable="true"
+          ReadData="@OnReadData"
+          SortMode="DataGridSortMode.Multiple"
+          Striped="true"
+          Bordered="true"
+          Hoverable="true"
+          TotalItems="@totalGameInstances">
+    <DataGridColumns>
+        <DataGridColumn TextAlignment="TextAlignment.Center" TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id"/>
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.HostId )" Caption="HostId" />
+    </DataGridColumns>
+</DataGrid>
+
+
+@*<DataGrid TItem="GameInstanceModel"
+          Data="@gameInstanceArr"
           ReadData="@OnReadData"
           TotalItems="@totalGameInstances">
     <DataGridCommandColumn TItem="GameInstanceModel" />
     @if (gameInstanceArr != null)
     {
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Sortable="false" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Sortable="true" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Sortable="true" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Sortable="true" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Sortable="true" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" />
+        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" />
     }
-</DataGrid>
+</DataGrid>*@
 
 @*Blazorise Form*@
 @*<h3>Create Game Instance</h3>
-<Fields>
-    <Field ColumnSize="ColumnSize.Is4.OnDesktop">
-        <FieldLabel>Game</FieldLabel>
-        <Select TValue="int" Placeholder="SelectOne">
-            @{ 
-                var gameNamesArr = Enum.GetNames(typeof(MWFModelsLibrary.Enums.Game));
-                int enumSize = gameNamesArr.Length;
+    <Fields>
+        <Field ColumnSize="ColumnSize.Is4.OnDesktop">
+            <FieldLabel>Game</FieldLabel>
+            <Select TValue="int" Placeholder="SelectOne">
+                @{
+                    var gameNamesArr = Enum.GetNames(typeof(MWFModelsLibrary.Enums.Game));
+                    int enumSize = gameNamesArr.Length;
 
-                Console.WriteLine("names arr length = " + gameNamesArr.Length);
-                for (int i = 0; i < enumSize; i++)
-                {
-                    Console.WriteLine("i = " + i);
-                    <SelectItem Value=2>@gameNamesArr[i]</SelectItem>
+                    Console.WriteLine("names arr length = " + gameNamesArr.Length);
+                    for (int i = 0; i < enumSize; i++)
+                    {
+                        Console.WriteLine("i = " + i);
+                        <SelectItem Value=2>@gameNamesArr[i]</SelectItem>
+                    }
                 }
-            }
-        </Select>
-    </Field>
-    <Field ColumnSize="ColumnSize.Is6.OnDesktop">
-        <FieldLabel>HostId</FieldLabel>
-        <TextEdit />
-    </Field>
-    <Field ColumnSize="ColumnSize.Is2.OnDesktop">
-        <FieldLabel>Args</FieldLabel>
-        <TextEdit />
-    </Field>
-</Fields>*@
+            </Select>
+        </Field>
+        <Field ColumnSize="ColumnSize.Is6.OnDesktop">
+            <FieldLabel>HostId</FieldLabel>
+            <TextEdit />
+        </Field>
+        <Field ColumnSize="ColumnSize.Is2.OnDesktop">
+            <FieldLabel>Args</FieldLabel>
+            <TextEdit />
+        </Field>
+    </Fields>*@
 
-@*Non Blazorise form*@
-<h3>Create Game Instance</h3>
-<EditForm Model="@NewGameInstanceToAdd" OnValidSubmit="CreateNewGameInstance">
-    <div class="form-group">
-        <label>Game</label>
-        <InputSelect @bind-Value="NewGameInstanceToAdd.Game" class="form-control">
-            @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
-            {
-                <option>@game.ToString()</option>
-            }
-        </InputSelect>
-    </div>
-    <div class="form-group">
-        <label>Args</label>
-        <InputText @bind-Value="NewGameInstanceToAdd.Args" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label>HostId</label>
-        <InputNumber @bind-Value="NewGameInstanceToAdd.HostId" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary" disabled=@isSubmitting>Create</button>
-</EditForm>
+
+<Card>
+    <CardHeader>
+        <CardTitle>Create New Game Instance</CardTitle>
+    </CardHeader>
+    <CardBody>
+        @*Non Blazorise form*@
+        <EditForm Model="@NewGameInstanceToAdd" OnValidSubmit="CreateNewGameInstance">
+            <div class="form-group">
+                <label>Game</label>
+                <InputSelect @bind-Value="NewGameInstanceToAdd.Game" class="form-control">
+                    @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
+                    {
+                        <option>@game.ToString()</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="form-group">
+                <label>Args</label>
+                <InputText @bind-Value="NewGameInstanceToAdd.Args" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>HostId</label>
+                <InputNumber @bind-Value="NewGameInstanceToAdd.HostId" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary" disabled=@isSubmitting>Create</button>
+        </EditForm>
+
+    </CardBody>
+</Card>
+
+
 
 <Snackbar @ref="snackbarSuccess" Color="SnackbarColor.Success">
     <SnackbarBody>
@@ -96,6 +127,8 @@
     bool isSubmitting;
     Snackbar snackbarSuccess;
     Snackbar snackbarFailure;
+
+    DataGrid<GameInstanceModel> dataGrid;
 
     protected override async Task OnInitializedAsync()
     {
@@ -131,5 +164,10 @@
 
         // always call StateHasChanged!
         StateHasChanged();
+    }
+
+    Task Reload()
+    {
+        return dataGrid.Reload();
     }
 }
