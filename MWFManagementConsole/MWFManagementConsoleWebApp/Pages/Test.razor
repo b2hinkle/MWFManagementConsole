@@ -87,18 +87,6 @@
                             </Field>
                             <Field>
                                 <FieldLabel>
-                                    Edit Mode
-                                </FieldLabel>
-                                <FieldBody>
-                                    <Select @bind-SelectedValue="@editMode">
-                                        <SelectItem Value="DataGridEditMode.Form">Form</SelectItem>
-                                        <SelectItem Value="DataGridEditMode.Inline">Inline</SelectItem>
-                                        <SelectItem Value="DataGridEditMode.Popup">Popup</SelectItem>
-                                    </Select>
-                                </FieldBody>
-                            </Field>
-                            <Field>
-                                <FieldLabel>
                                     Resizable Mode
                                 </FieldLabel>
                                 <FieldBody>
@@ -149,7 +137,7 @@
                           ReadData="@(largeDataMode ? OnReadData : null)"
                           Data="@dataModels"
                           TotalItems="@(largeDataMode ? totalEmployees : null)"
-                          EditMode="@editMode"
+                          EditMode="DataGridEditMode.Popup"
                           Editable="@editable"
                           Resizable="@resizable"
                           ResizeMode="@resizableMode"
@@ -374,7 +362,6 @@
     */
     #region Members
 
-    DataGridEditMode editMode = DataGridEditMode.Popup;
     DataGridSortMode sortMode = DataGridSortMode.Multiple;
     DataGridSelectionMode selectionMode = DataGridSelectionMode.Single;
     DataGridCommandMode commandsMode = DataGridCommandMode.Commands;
