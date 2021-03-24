@@ -123,7 +123,7 @@
                         <DataGridColumn TextAlignment="TextAlignment.Center" TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="#" Sortable="false" Width="60px" />
                         <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id" Validator="@CheckFirstName" Editable="true">
                             <FilterTemplate>
-                                <TextEdit Placeholder="Search name" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                                <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
                             </FilterTemplate>
                         </DataGridColumn>
                         <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" Editable="true">
@@ -143,8 +143,16 @@
                                 }
                             </FilterTemplate>
                         </DataGridColumn>
-                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop" />
-                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" Editable="true"/>
+                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
+                            <FilterTemplate>
+                                <TextEdit Placeholder="Search by Port" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                            </FilterTemplate>
+                        </DataGridColumn>
+                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" Editable="true">
+                            <FilterTemplate>
+                                <TextEdit Placeholder="Search by Args" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                            </FilterTemplate>
+                        </DataGridColumn>
                     </DataGridColumns>
                     <PopupTitleTemplate>
                         @if (context.EditState == DataGridEditState.Edit)
