@@ -46,7 +46,7 @@
                         <Fields>
                             <Field>
                                 <FieldLabel>
-                                    Custom Search
+                                    Search
                                 </FieldLabel>
                                 <FieldBody>
                                     <TextEdit @bind-Text="@customFilterValue" />
@@ -126,11 +126,9 @@
                                 <TextEdit Placeholder="Search name" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
                             </FilterTemplate>
                         </DataGridColumn>
-                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" Editable="true" ValidationPattern="[A-Za-z]{3}" />
-                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" Validator="CheckEMail" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop" />
-                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" Editable="true">
+                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" Editable="true">
                             <CaptionTemplate>
-                                <Icon Name="IconName.City" /> @context.Caption
+                                <Icon Name="IconName.Gamepad" /> @context.Caption
                             </CaptionTemplate>
                             <FilterTemplate>
                                 @{
@@ -139,12 +137,14 @@
                                         <SelectItem Value="@("*")">All</SelectItem>
                                         @foreach (var item in dataModels)
                                         {
-                                            <SelectItem Value="@item.Args">@item.Args</SelectItem>
+                                            <SelectItem Value="@item.Game">@item.Game</SelectItem>
                                         }
                                     </Select>
                                 }
                             </FilterTemplate>
                         </DataGridColumn>
+                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop" />
+                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" Editable="true"/>
                     </DataGridColumns>
                     <PopupTitleTemplate>
                         @if (context.EditState == DataGridEditState.Edit)
