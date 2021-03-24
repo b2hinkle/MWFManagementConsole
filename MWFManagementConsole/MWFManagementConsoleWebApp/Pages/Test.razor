@@ -1,4 +1,5 @@
 ﻿@page "/Test"
+@inject HttpClient Http
 @using System;
 @using System.Collections.Generic;
 @using System.Linq;
@@ -59,42 +60,12 @@
                             </Field>
                             <Field>
                                 <FieldLabel>
-                                    <Tooltip Text="Defines if paginator buttons are visible.">
-                                        <Icon Name="IconName.QuestionCircle" />
-                                    </Tooltip>
-                                </FieldLabel>
-                                <FieldBody>
-                                    <Check @bind-Checked="@showPager">Show Pager</Check>
-                                </FieldBody>
-                            </Field>
-                            <Field>
-                                <FieldLabel>
-                                    <Tooltip Text="Defines if pagesize dropdown will be visible.">
-                                        <Icon Name="IconName.QuestionCircle" />
-                                    </Tooltip>
-                                </FieldLabel>
-                                <FieldBody>
-                                    <Check @bind-Checked="@showPageSizes">Show Page sizes</Check>
-                                </FieldBody>
-                            </Field>
-                            <Field>
-                                <FieldLabel>
                                     <Tooltip Text="Defines if Datagrid shows a button row on the pager.">
                                         <Icon Name="IconName.QuestionCircle" />
                                     </Tooltip>
                                 </FieldLabel>
                                 <FieldBody>
                                     <Check @bind-Checked="@showButtonRow">Show Button Row</Check>
-                                </FieldBody>
-                            </Field>
-                            <Field>
-                                <FieldLabel>
-                                    <Tooltip Text="If true, DataGrid will dynamicaly fetch data based on the current page and page size.">
-                                        <Icon Name="IconName.QuestionCircle" />
-                                    </Tooltip>
-                                </FieldLabel>
-                                <FieldBody>
-                                    <Check @bind-Checked="@largeDataMode">Large Data</Check>
                                 </FieldBody>
                             </Field>
                         </Fields>
@@ -187,9 +158,7 @@
                           SelectionMode="@selectionMode"
                           CommandMode="@commandsMode"
                           Filterable="@filterable"
-                          ShowPager="@showPager"
                           PagerPosition="DataGridPagerPosition.TopAndBottom"
-                          ShowPageSizes="@showPageSizes"
                           RowInserted="@OnRowInserted"
                           RowUpdated="@OnRowUpdated"
                           RowRemoved="@OnRowRemoved"
@@ -314,7 +283,7 @@
                                 int enumSize = gameNamesArr.Length;
 
                                 Console.WriteLine("names arr length = " + gameNamesArr.Length);
-                                for (int i = 0; i < enumSize-1; i++)
+                                for (int i = 0; i < enumSize - 1; i++)
                                 {
                                     Console.WriteLine("i = " + i);
                                     <SelectItem Value=2>@gameNamesArr[i]</SelectItem>
@@ -418,8 +387,6 @@
     bool resizable = true;
     bool sortable = true;
     bool filterable = true;
-    bool showPager = true;
-    bool showPageSizes = true;
     bool largeDataMode = false;
     bool showButtonRow = true;
 
@@ -519,8 +486,7 @@
 
         if (!e.CancellationToken.IsCancellationRequested)
         {
-            // this can be call to anything, in this case we're calling a fictional api
-            var response = dataModels.Skip((e.Page - 1) * e.PageSize).Take(e.PageSize).ToList();
+            IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
 
             employeeList = new List<GameInstanceModel>(response); // an actual data for the current page
             totalEmployees = dataModels.Count; // this is used to tell datagrid how many items are available so that pagination will work
@@ -537,6 +503,6 @@
     }
 
     #endregion
-    }
+}
 
 
