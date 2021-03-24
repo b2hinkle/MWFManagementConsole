@@ -14,7 +14,7 @@
 
 <DataGrid TItem="GameInstanceModel"
           @ref="dataGrid"
-          Data="@gameInstanceArr"
+          Data="@gamInstancesArr"
           ReadData="@OnReadData"
           SortMode="DataGridSortMode.Multiple"
           Striped="true"
@@ -47,17 +47,17 @@
 </DataGrid>*@
 
 @*Blazorise Form*@
-@*<h3>Create Game Instance</h3>
+<h3>Create Game Instance</h3>
     <Fields>
         <Field ColumnSize="ColumnSize.Is4.OnDesktop">
             <FieldLabel>Game</FieldLabel>
-            <Select TValue="int" Placeholder="SelectOne">
+            <Select TValue="int">
                 @{
                     var gameNamesArr = Enum.GetNames(typeof(MWFModelsLibrary.Enums.Game));
                     int enumSize = gameNamesArr.Length;
 
                     Console.WriteLine("names arr length = " + gameNamesArr.Length);
-                    for (int i = 0; i < enumSize; i++)
+                    for (int i = 0; i < enumSize-1; i++)
                     {
                         Console.WriteLine("i = " + i);
                         <SelectItem Value=2>@gameNamesArr[i]</SelectItem>
@@ -73,15 +73,15 @@
             <FieldLabel>Args</FieldLabel>
             <TextEdit />
         </Field>
-    </Fields>*@
+    </Fields>
 
 
-<Card>
+@*<Card>
     <CardHeader>
         <CardTitle>Create New Game Instance</CardTitle>
     </CardHeader>
     <CardBody>
-        @*Non Blazorise form*@
+        @*Non Blazorise form
         <EditForm Model="@NewGameInstanceToAdd" OnValidSubmit="CreateNewGameInstance">
             <div class="form-group">
                 <label>Game</label>
@@ -104,7 +104,7 @@
         </EditForm>
 
     </CardBody>
-</Card>
+</Card>*@
 
 
 
@@ -153,14 +153,14 @@
         }
     }
 
-    GameInstanceModel[] gameInstanceArr;
+    List<GameInstanceModel> gamInstancesArr = new List<GameInstanceModel>();
     int totalGameInstances;
     async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
     {
         IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
 
-        gameInstanceArr = response.ToArray(); // an actual data for the current page
-        totalGameInstances = gameInstanceArr.Length; // this is used to tell datagrid how many items are available so that pagination will work
+        gamInstancesArr = response.ToList(); // an actual data for the current page
+        totalGameInstances = gamInstancesArr.Count; // this is used to tell datagrid how many items are available so that pagination will work
 
         // always call StateHasChanged!
         StateHasChanged();
