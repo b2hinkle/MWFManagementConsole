@@ -148,9 +148,7 @@
                           Hoverable="true"
                           Responsive="true"
                           ValidationsSummaryLabel="Following error occurs..."
-                          CustomFilter="@OnCustomFilter"
-                          CurrentPage="currentPage"
-                          PageChanged="(e) => currentPage = e.Page">
+                          CustomFilter="@OnCustomFilter">
                     <EmptyTemplate>No records...</EmptyTemplate>
                     <DataGridColumns>
                         <DataGridMultiSelectColumn TItem="GameInstanceModel" Width="30px">
@@ -357,7 +355,6 @@
     DataGridResizeMode resizableMode = DataGridResizeMode.Header;
 
     DataGrid<GameInstanceModel> dataGrid;
-    public int currentPage { get; set; } = 1;
 
     bool editable = true;
     bool resizable = true;
@@ -474,7 +471,6 @@
 
     Task Reload()
     {
-        currentPage = 1;
         return dataGrid.Reload();
     }
 
