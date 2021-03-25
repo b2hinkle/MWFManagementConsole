@@ -393,7 +393,7 @@
     async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
     {
         @*await Task.Delay(random.Next(800));*@
-
+        Console.WriteLine("OnReadDataaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         if (!e.CancellationToken.IsCancellationRequested)
         {
             IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
@@ -417,12 +417,12 @@
         }
     }
 
-    Task Reload()
-    {
-        return dataGrid.Reload();
-    }
+Task Reload()
+{
+    return dataGrid.Reload();
+}
 
-    #endregion
+#endregion
 }
 
 
