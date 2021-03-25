@@ -60,13 +60,13 @@
                 <DataGrid @ref="dataGrid"
                           TItem="GameInstanceModel"
                           ReadData="@(largeDataMode ? OnReadData : null)"
-                          Data="@dataModels"
+                          Data="@employeeList"
                           TotalItems="@(largeDataMode ? totalEmployees : null)"
                           EditMode="DataGridEditMode.Popup"
                           Editable="@editable"
                           Resizable="@resizable"
                           ResizeMode="@resizableMode"
-                          ShowPager="@showPager"     
+                          ShowPager="@showPager"
                           Sortable="@sortable"
                           SortMode="@sortMode"
                           SelectionMode="@selectionMode"
@@ -303,7 +303,7 @@
     bool resizable = true;
     bool sortable = true;
     bool filterable = true;
-    bool largeDataMode = true;
+    bool largeDataMode = false;
 
     GameInstanceModel selectedEmployee;
     List<GameInstanceModel> selectedEmployees;
@@ -319,6 +319,28 @@
     #endregion
 
     #region Methods
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
+
+        employeeList = new List<GameInstanceModel>(response); // an actual data for the current page
+        totalEmployees = dataModels.Count; // this is used to tell datagrid how many items are available so that pagination will work
+
+
+        foreach (GameInstanceModel item in employeeList)
+        {
+            string gameName = item.Game.ToString();
+            if (searchableGames.Contains(gameName) == false)
+            {
+                searchableGames.Add(gameName);
+            }
+        }
+
+
+        // always call StateHasChanged!
+        await InvokeAsync(StateHasChanged);
+    }
+
 
     public void CheckEMail(ValidatorEventArgs validationArgs)
     {
@@ -392,8 +414,7 @@
 
     async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
     {
-        @*await Task.Delay(random.Next(800));*@
-        Console.WriteLine("OnReadDataaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        await Task.Delay(random.Next(800));
         if (!e.CancellationToken.IsCancellationRequested)
         {
             IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
@@ -417,12 +438,12 @@
         }
     }
 
-Task Reload()
-{
-    return dataGrid.Reload();
-}
+    Task Reload()
+    {
+        return dataGrid.Reload();
+    }
 
-#endregion
+    #endregion
 }
 
 

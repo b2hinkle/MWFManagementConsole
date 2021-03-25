@@ -29,7 +29,7 @@ namespace MWFManagementConsoleWebApp
         public static async Task Main(string[] args)
         {
             // This is a temporary solution to debugger sometimes not working until Microsoft fixes this Blazor bug
-            await DebugDelayAsync();
+            /*await DebugDelayAsync();*/
 
 
 
