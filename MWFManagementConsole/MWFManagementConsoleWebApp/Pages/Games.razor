@@ -12,23 +12,91 @@
 
 
 
-<DataGrid TItem="GameInstanceModel"
-          @ref="dataGrid"
-          Data="@gamInstancesArr"
-          ReadData="@OnReadData"
-          SortMode="DataGridSortMode.Multiple"
-          Striped="true"
-          Bordered="true"
-          Hoverable="true"
-          TotalItems="@totalGameInstances">
-    <DataGridColumns>
-        <DataGridColumn TextAlignment="TextAlignment.Center" TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id"/>
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.HostId )" Caption="HostId" />
-    </DataGridColumns>
-</DataGrid>
+<CardBody>
+    <Row>
+        <Column>
+            <Fields>
+                <Field>
+                    <FieldLabel>
+                        Search
+                    </FieldLabel>
+                    <FieldBody>
+                        <TextEdit @bind-Text="@customFilterValue" />
+                    </FieldBody>
+                </Field>
+            </Fields>
+
+            <DataGrid TItem="GameInstanceModel"
+                      @ref="dataGrid"
+                      Data="@dataModels"
+                      SortMode="DataGridSortMode.Multiple"
+                      Striped="true"
+                      Bordered="true"
+                      Hoverable="true"
+                      Filterable="true"
+                      CustomFilter="@OnCustomFilter">
+                <DataGridColumns>
+                    <DataGridCommandColumn TItem="GameInstanceModel" EditCommandAllowed="false" DeleteCommandAllowed="false" Width="140px">
+                        <NewCommandTemplate>
+                            <Button Color="Color.Success" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                        </SaveCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                        </CancelCommandTemplate>
+                        <ClearFilterCommandTemplate>
+                            <Button Color="Color.Warning" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                        </ClearFilterCommandTemplate>
+                    </DataGridCommandColumn>
+
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id" Editable="true">
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" Editable="true">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.Gamepad" /> @context.Caption
+                        </CaptionTemplate>
+                        <FilterTemplate>
+                            @{
+                                var selectedValue = @context.SearchValue ?? "*";
+                                <Select TValue="string" SelectedValue="@selectedValue" SelectedValueChanged="@(e => context.TriggerFilterChange(e == "*" ? "" : e.ToString()))">
+                                    <SelectItem Value="@("*")">All</SelectItem>
+                                    @foreach (string item in searchableGames)
+                                    {
+                                        <SelectItem Value="@item">@item</SelectItem>
+                                    }
+                                </Select>
+                            }
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by Port" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" Editable="true">
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by Args" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    @*
+                <DataGridColumn TextAlignment="TextAlignment.Center" TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id" />
+                <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" />
+                <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" />
+                <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" />
+                <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.HostId )" Caption="HostId" />*@
+                </DataGridColumns>
+            </DataGrid>
+
+        </Column>
+    </Row>
+</CardBody>
+
+
 
 
 @*<DataGrid TItem="GameInstanceModel"
@@ -129,10 +197,42 @@
     Snackbar snackbarFailure;
 
     DataGrid<GameInstanceModel> dataGrid;
+    List<GameInstanceModel> dataModels = new List<GameInstanceModel>();
+    List<string> searchableGames = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
-        @*IEnumerable <GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"Get Hosts Endpoint");*@
+        IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
+
+        dataModels = response.ToList(); // an actual data for the current page
+
+
+
+        foreach (GameInstanceModel item in dataModels)
+        {
+            string gameName = item.Game.ToString();
+            if (searchableGames.Contains(gameName) == false)
+            {
+                searchableGames.Add(gameName);
+            }
+        }
+
+
+
+        // always call StateHasChanged!
+        StateHasChanged();
+    }
+
+    string customFilterValue;
+    bool OnCustomFilter(GameInstanceModel model)
+    {
+        if (string.IsNullOrEmpty(customFilterValue))
+            return true;
+
+        return
+            model.Id.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.Game.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.Port?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
     }
 
     GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
@@ -151,19 +251,6 @@
         {
             snackbarFailure.Show();
         }
-    }
-
-    List<GameInstanceModel> gamInstancesArr = new List<GameInstanceModel>();
-    int totalGameInstances;
-    async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
-    {
-        IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
-
-        gamInstancesArr = response.ToList(); // an actual data for the current page
-        totalGameInstances = gamInstancesArr.Count; // this is used to tell datagrid how many items are available so that pagination will work
-
-        // always call StateHasChanged!
-        StateHasChanged();
     }
 
     Task Reload()
