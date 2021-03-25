@@ -135,9 +135,9 @@
                                     var selectedValue = @context.SearchValue ?? "*";
                                     <Select TValue="string" SelectedValue="@selectedValue" SelectedValueChanged="@(e => context.TriggerFilterChange(e == "*" ? "" : e.ToString()))">
                                         <SelectItem Value="@("*")">All</SelectItem>
-                                        @foreach (var item in dataModels)
+                                        @foreach (string item in searchableGames)
                                         {
-                                            <SelectItem Value="@item.Game">@item.Game</SelectItem>
+                                            <SelectItem Value="@item">@item</SelectItem>
                                         }
                                     </Select>
                                 }
@@ -303,7 +303,7 @@
     bool resizable = true;
     bool sortable = true;
     bool filterable = true;
-    bool largeDataMode = false;
+    bool largeDataMode = true;
 
     GameInstanceModel selectedEmployee;
     List<GameInstanceModel> selectedEmployees;
@@ -313,13 +313,8 @@
 
     Random random = new Random();
 
-    List<GameInstanceModel> dataModels = new List<GameInstanceModel> {
-    new GameInstanceModel {Id = 0, Game = MWFModelsLibrary.Enums.Game.Game1, Port = "7777",Args = "idk"},
-    new GameInstanceModel {Id = 1, Game = MWFModelsLibrary.Enums.Game.Game1, Port = "7757",Args = "d"},
-    new GameInstanceModel {Id = 2, Game = MWFModelsLibrary.Enums.Game.Game1, Port = "7677",Args = "fgh"},
-    new GameInstanceModel {Id = 3, Game = MWFModelsLibrary.Enums.Game.Game1, Port = "7377",Args = "6jh"},
-    new GameInstanceModel {Id = 4, Game = MWFModelsLibrary.Enums.Game.Game1, Port = "7727",Args = "idssk"},
-    };
+    List<string> searchableGames = new List<string>();
+    List<GameInstanceModel> dataModels = new List<GameInstanceModel>();
 
     #endregion
 
@@ -397,7 +392,7 @@
 
     async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
     {
-        await Task.Delay(random.Next(800));
+        @*await Task.Delay(random.Next(800));*@
 
         if (!e.CancellationToken.IsCancellationRequested)
         {
@@ -405,6 +400,17 @@
 
             employeeList = new List<GameInstanceModel>(response); // an actual data for the current page
             totalEmployees = dataModels.Count; // this is used to tell datagrid how many items are available so that pagination will work
+
+
+            foreach (GameInstanceModel item in employeeList)
+            {
+                string gameName = item.Game.ToString();
+                if (searchableGames.Contains(gameName) == false)
+                {
+                    searchableGames.Add(gameName);
+                }
+            }
+
 
             // always call StateHasChanged!
             await InvokeAsync(StateHasChanged);
