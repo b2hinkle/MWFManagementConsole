@@ -60,7 +60,7 @@
                 <DataGrid @ref="dataGrid"
                           TItem="GameInstanceModel"
                           ReadData="@(largeDataMode ? OnReadData : null)"
-                          Data="@employeeList"
+                          Data="@(largeDataMode ? employeeList : dataModels)"
                           TotalItems="@(largeDataMode ? totalEmployees : null)"
                           EditMode="DataGridEditMode.Popup"
                           Editable="@editable"
@@ -100,19 +100,13 @@
                                 </Label>
                             </MultiSelectTemplate>
                         </DataGridMultiSelectColumn>
-                        <DataGridCommandColumn TItem="GameInstanceModel" Width="170px">
+                        <DataGridCommandColumn TItem="GameInstanceModel" EditCommandAllowed="false" DeleteCommandAllowed="false" Width="140px">
                             <NewCommandTemplate>
                                 <Button Color="Color.Success" Clicked="@context.Clicked">@context.LocalizationString</Button>
                             </NewCommandTemplate>
-                            <EditCommandTemplate>
-                                <Button Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-                            </EditCommandTemplate>
                             <SaveCommandTemplate>
                                 <Button Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
                             </SaveCommandTemplate>
-                            <DeleteCommandTemplate>
-                                <Button Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
-                            </DeleteCommandTemplate>
                             <CancelCommandTemplate>
                                 <Button Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
                             </CancelCommandTemplate>
@@ -120,8 +114,7 @@
                                 <Button Color="Color.Warning" Clicked="@context.Clicked">@context.LocalizationString</Button>
                             </ClearFilterCommandTemplate>
                         </DataGridCommandColumn>
-                        <DataGridColumn TextAlignment="TextAlignment.Center" TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="#" Sortable="false" Width="60px" />
-                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id" Validator="@CheckFirstName" Editable="true">
+                        <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id" Validator="@CheckId" Editable="true">
                             <FilterTemplate>
                                 <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
                             </FilterTemplate>
@@ -167,18 +160,12 @@
                     <EmptyCellTemplate>
                         <Text Style="opacity: .5;">--</Text>
                     </EmptyCellTemplate>
-                    <ButtonRowTemplate>
-                        <Button Color="Color.Success" Clicked="@context.NewCommand.Clicked">@context.NewCommand.LocalizationString</Button>
-                        <Button Color="Color.Primary" Clicked="@context.EditCommand.Clicked" Disabled="@(selectedEmployee is null)">@context.EditCommand.LocalizationString</Button>
-                        <Button Color="Color.Danger" Clicked="@context.DeleteCommand.Clicked" Disabled="@(selectedEmployee is null)">@context.DeleteCommand.LocalizationString</Button>
-                        <Button Color="Color.Warning" Clicked="@context.ClearFilterCommand.Clicked">@context.ClearFilterCommand.LocalizationString</Button>
-                    </ButtonRowTemplate>
                 </DataGrid>
             </CardBody>
         </Card>
     </Column>
 </Row>
-<Row>
+@*<Row>
     <Column>
         <Card>
             <CardHeader>
@@ -224,7 +211,7 @@
             </CardBody>
         </Card>
     </Column>
-</Row>
+</Row>*@
 
 @if (selectionMode == DataGridSelectionMode.Multiple && selectedEmployees?.Count > 0)
 {
@@ -323,11 +310,11 @@
     {
         IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
 
-        employeeList = new List<GameInstanceModel>(response); // an actual data for the current page
+        dataModels = response.ToList(); // an actual data for the current page
         totalEmployees = dataModels.Count; // this is used to tell datagrid how many items are available so that pagination will work
 
 
-        foreach (GameInstanceModel item in employeeList)
+        foreach (GameInstanceModel item in dataModels)
         {
             string gameName = item.Game.ToString();
             if (searchableGames.Contains(gameName) == false)
@@ -342,61 +329,56 @@
     }
 
 
-    public void CheckEMail(ValidatorEventArgs validationArgs)
-    {
-        ValidationRule.IsEmail(validationArgs);
-
-        if (validationArgs.Status == ValidationStatus.Error)
-        {
-            validationArgs.ErrorText = "EMail has to be valid email";
-        }
-    }
-
-    public void CheckFirstName(ValidatorEventArgs validationArgs)
+    public void CheckPort(ValidatorEventArgs validationArgs)
     {
         ValidationRule.IsNotEmpty(validationArgs);
 
         if (validationArgs.Status == ValidationStatus.Error)
         {
-            validationArgs.ErrorText = "First name has to be provided";
+            validationArgs.ErrorText = "Port has to be provided";
+        }
+    }
+
+    public void CheckId(ValidatorEventArgs validationArgs)
+    {
+        ValidationRule.IsNotEmpty(validationArgs);
+
+        if (validationArgs.Status == ValidationStatus.Error)
+        {
+            validationArgs.ErrorText = "Id has to be provided";
         }
     }
 
     void OnEmployeeNewItemDefaultSetter(GameInstanceModel employee)
     {
-
+        employee.Id = 0;
     }
 
     void OnRowInserted(SavedRowItem<GameInstanceModel, Dictionary<string, object>> e)
     {
-        //var employee = e.Item;
+        var employee = e.Item;
 
-        //employee.Id = dataModels?.Max( x => x.Id ) + 1 ?? 1;
+        employee.Id = dataModels?.Max( x => x.Id ) + 1 ?? 1;
 
-        //dataModels.Add( employee );
+        dataModels.Add( employee );
     }
 
     void OnRowUpdated(SavedRowItem<GameInstanceModel, Dictionary<string, object>> e)
     {
-        //var employee = e.Item;
+        var employee = e.Item;
 
-        //employee.FirstName = (string)e.Values["FirstName"];
-        //employee.LastName = (string)e.Values["LastName"];
-        //employee.EMail = (string)e.Values["EMail"];
-        //employee.City = (string)e.Values["City"];
-        //employee.Zip = (string)e.Values["Zip"];
-        //employee.DateOfBirth = (DateTime?)e.Values["DateOfBirth"];
-        //employee.Childrens = (int?)e.Values["Childrens"];
-        //employee.Gender = (string)e.Values["Gender"];
-        //employee.Salary = (decimal)e.Values["Salary"];
+        employee.Id = (int)e.Values["Id"];
+        employee.Game = (MWFModelsLibrary.Enums.Game)e.Values["Game"];
+        employee.Port = (string)e.Values["Port"];
+        employee.Args = (string)e.Values["Args"];
     }
 
     void OnRowRemoved(GameInstanceModel model)
     {
-        //if ( dataModels.Contains( model ) )
-        //{
-        //    dataModels.Remove( model );
-        //}
+        if ( dataModels.Contains( model ) )
+        {
+            dataModels.Remove( model );
+        }
     }
 
     string customFilterValue;
