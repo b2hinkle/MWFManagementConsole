@@ -5,10 +5,10 @@
 
 
 @*<h3>Game Instances</h3>
-@if (gameInstanceArr == null)
-{
-    <p>Fetching data....</p>
-}*@
+    @if (gameInstanceArr == null)
+    {
+        <p>Fetching data....</p>
+    }*@
 
 
 
@@ -34,6 +34,8 @@
                       Bordered="true"
                       Hoverable="true"
                       Filterable="true"
+                      PageSize="@pageSize"
+                      ShowPager="@true"
                       CustomFilter="@OnCustomFilter">
                 <DataGridColumns>
                     <DataGridCommandColumn TItem="GameInstanceModel" EditCommandAllowed="false" DeleteCommandAllowed="false" Width="140px">
@@ -83,12 +85,6 @@
                             <TextEdit Placeholder="Search by Args" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
                         </FilterTemplate>
                     </DataGridColumn>
-                    @*
-                <DataGridColumn TextAlignment="TextAlignment.Center" TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id" />
-                <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" />
-                <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" />
-                <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" />
-                <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.HostId )" Caption="HostId" />*@
                 </DataGridColumns>
             </DataGrid>
 
@@ -100,19 +96,19 @@
 
 
 @*<DataGrid TItem="GameInstanceModel"
-          Data="@gameInstanceArr"
-          ReadData="@OnReadData"
-          TotalItems="@totalGameInstances">
-    <DataGridCommandColumn TItem="GameInstanceModel" />
-    @if (gameInstanceArr != null)
-    {
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" />
-        <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" />
-    }
-</DataGrid>*@
+              Data="@gameInstanceArr"
+              ReadData="@OnReadData"
+              TotalItems="@totalGameInstances">
+        <DataGridCommandColumn TItem="GameInstanceModel" />
+        @if (gameInstanceArr != null)
+        {
+            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" />
+            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" />
+            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" />
+            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" />
+            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" />
+        }
+    </DataGrid>*@
 
 
 <Card>
@@ -130,6 +126,10 @@
                         <option>@game.ToString()</option>
                     }
                 </InputSelect>
+            </div>
+            <div class="form-group">
+                <label>Port</label>
+                <InputText @bind-Value="NewGameInstanceToAdd.Port" class="form-control" />
             </div>
             <div class="form-group">
                 <label>Args</label>
@@ -163,19 +163,20 @@
 
 @code
 {
+    int pageSize = 50;
     bool isSubmitting;
     Snackbar snackbarSuccess;
     Snackbar snackbarFailure;
 
     DataGrid<GameInstanceModel> dataGrid;
-    List<GameInstanceModel> dataModels = new List<GameInstanceModel>();
+    List<GameInstanceModel> dataModels;
     List<string> searchableGames = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
         IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
 
-        dataModels = response.ToList(); // an actual data for the current page
+        dataModels = new List<GameInstanceModel>(response); // an actual data for the current page
 
 
 
