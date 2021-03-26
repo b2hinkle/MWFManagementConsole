@@ -126,16 +126,16 @@
 
 
 
-<Snackbar @ref="snackbarSuccess" Color="SnackbarColor.Success">
+<Snackbar @ref="snackbarGICreated" Color="SnackbarColor.Success">
     <SnackbarBody>
-        New game instance running
-        <SnackbarAction Clicked="@(() => snackbarSuccess.Hide())">CLOSE</SnackbarAction>
+        New game instance created successfully!
+        <SnackbarAction Clicked="@(() => snackbarGICreated.Hide())">CLOSE</SnackbarAction>
     </SnackbarBody>
 </Snackbar>
-<Snackbar @ref="snackbarFailure" Color="SnackbarColor.Danger">
+<Snackbar @ref="snackbarGINotCreated" Color="SnackbarColor.Danger">
     <SnackbarBody>
-        Failed to create and run new game instance
-        <SnackbarAction Clicked="@(() => snackbarFailure.Hide())">CLOSE</SnackbarAction>
+        Failed to create new game instance
+        <SnackbarAction Clicked="@(() => snackbarGINotCreated.Hide())">CLOSE</SnackbarAction>
     </SnackbarBody>
 </Snackbar>
 
@@ -149,8 +149,8 @@
     bool isSubmitting;
     bool RefreshButtonDisabed;
     bool isDeleting;
-    Snackbar snackbarSuccess;
-    Snackbar snackbarFailure;
+    Snackbar snackbarGICreated;
+    Snackbar snackbarGINotCreated;
 
     DataGrid<GameInstanceModel> dataGrid;
     List<GameInstanceModel> dataModels;
@@ -194,19 +194,19 @@
 
     async Task CreateNewGameInstance()
     {
-        snackbarSuccess.Hide();
-        snackbarFailure.Hide();
+        snackbarGICreated.Hide();
+        snackbarGINotCreated.Hide();
         isSubmitting = true;
         var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", (GameInstanceModel)AddGIFormContext.Model, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         isSubmitting = false;
         if (result.IsSuccessStatusCode)
         {
-            snackbarSuccess.Show();
+            snackbarGICreated.Show();
             await ReloadTable();    // Fetch the new table data and display it
         }
         else
         {
-            snackbarFailure.Show();
+            snackbarGINotCreated.Show();
         }
 
         // Refresh the Editcontext so validator outlines go away
