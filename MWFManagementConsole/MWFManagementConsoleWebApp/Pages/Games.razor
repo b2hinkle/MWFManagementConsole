@@ -85,7 +85,10 @@
             You are about to shut down this game instance and remove it from the database. Would you like to proceed?
         </ModalBody>
         <ModalFooter>
-            <Button Loading="isDeleting" Disabled="isDeleting" Color="Color.Danger" Clicked="@ShutDownAndRemove"> Shutdown and remove</Button>
+            <Button Color="Color.Secondary" Clicked="@removeWindowRef.Hide">Close</Button>
+            <Button Loading="isDeleting" Disabled="isDeleting" Color="Color.Danger" Clicked="@ShutDownAndRemove">
+                <Icon Name="IconName.Delete" /> Shutdown and remove
+            </Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
