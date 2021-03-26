@@ -28,6 +28,7 @@
                       Filterable="true"
                       PageSize="@pageSize"
                       ShowPager="@true"
+                      SelectedRowChanged="@OnSelectedRowChanged"
                       CustomFilter="@OnCustomFilter">
                 <EmptyTemplate>No records...</EmptyTemplate>
                 <DataGridColumns>
@@ -71,14 +72,14 @@
                     </DataGridColumn>
                 </DataGridColumns>
             </DataGrid>
-                <Button Color="Color.Danger" Clicked="@ShowRemoveWindow" Disabled="isDeleting" Loading="isDeleting" Size="Size.Small"> Delete Selected</Button>
+                <Button Color="Color.Danger" Clicked="@(dataGrid?.SelectedRow != null ? removeWindowRef.Show : null)" Disabled="(dataGrid?.SelectedRow == null || isDeleting)" Loading="isDeleting" Size="Size.Small"> Delete Selected</Button>
         </Column>
     </Row>
 </CardBody>
 
 
 <Modal @ref="removeWindowRef">
-    <ModalContent IsCentered="true">
+    <ModalContent>
         <ModalBody>
             You are about to shut down this game server and remove it from the database. Would you like to proceed?
         </ModalBody>
@@ -176,12 +177,9 @@
             || model.Port?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
     }
 
-    void ShowRemoveWindow()
+    void OnSelectedRowChanged()
     {
-        if (dataGrid.SelectedRow != null)
-        {
-            removeWindowRef.Show();
-        }
+        StateHasChanged();
     }
 
     async Task ShutDownAndRemove()
