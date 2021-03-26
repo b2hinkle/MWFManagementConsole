@@ -173,7 +173,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-
+        @*IEnumerable<HostModel> response = await Http.GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHostModelEndpoint");*@
         await ReloadTable();
     }
 
