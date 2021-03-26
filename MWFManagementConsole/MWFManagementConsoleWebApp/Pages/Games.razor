@@ -105,7 +105,7 @@
         <ModalBody>
             <Field>
                 <FieldLabel>Game</FieldLabel>
-                <Select @bind-SelectedValue="NewGameInstanceToAdd.Game" TValue="MWFModelsLibrary.Enums.Game">
+                <Select @bind-SelectedValue="newGameInstanceToAdd.Game" TValue="MWFModelsLibrary.Enums.Game">
                     @{
                         @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
                         {
@@ -116,15 +116,15 @@
             </Field>
             <Field>
                 <FieldLabel>Port</FieldLabel>
-                <TextEdit @bind-Text="NewGameInstanceToAdd.Port" />
+                <TextEdit @bind-Text="newGameInstanceToAdd.Port" />
             </Field>
             <Field>
                 <FieldLabel>HostId</FieldLabel>
-                <NumericEdit @bind-Value="NewGameInstanceToAdd.HostId"/>
+                <NumericEdit @bind-Value="newGameInstanceToAdd.HostId"/>
             </Field>
             <Field>
                 <FieldLabel>Args</FieldLabel>
-                <TextEdit @bind-Text="NewGameInstanceToAdd.Args"/>
+                <TextEdit @bind-Text="newGameInstanceToAdd.Args"/>
             </Field>
         </ModalBody>
         <ModalFooter>
@@ -169,7 +169,7 @@
     DataGrid<GameInstanceModel> dataGrid;
     List<GameInstanceModel> dataModels;
     List<string> searchableGames = new List<string>();
-    GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
+    GameInstanceModel newGameInstanceToAdd = new GameInstanceModel();
 
     protected override async Task OnInitializedAsync()
     {
@@ -210,12 +210,12 @@
         snackbarGICreated.Hide();
         snackbarGINotCreated.Hide();
         isSubmitting = true;
-        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", (GameInstanceModel)AddGIFormContext.Model, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", newGameInstanceToAdd, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         isSubmitting = false;
         if (result.IsSuccessStatusCode)
         {
             createWindowRef.Hide();
-            NewGameInstanceToAdd = new GameInstanceModel();
+            newGameInstanceToAdd = new GameInstanceModel();
             snackbarGICreated.Show();
             await ReloadTable();    // Fetch the new table data and display it
         }
@@ -223,9 +223,6 @@
         {
             snackbarGINotCreated.Show();
         }
-
-        // Refresh the Editcontext so validator outlines go away
-        AddGIFormContext = new EditContext(NewGameInstanceToAdd);
     }
 
     async Task ReloadTable()
