@@ -12,10 +12,10 @@
                 <Field>
                     <FieldBody>
                         <Inline>
-                            <Button Color="Color.Primary" Clicked="@ReloadTable" Size="Size.Small" Disabled="RefreshButtonDisabed" Loading="RefreshButtonDisabed"> Refresh</Button>
-                            <Button Color="Color.Success" Clicked="@createWindowRef.Show" Size="Size.Small"> Create</Button>
-                            <Button Color="Color.Danger" Clicked="@(dataGrid?.SelectedRow != null ? removeWindowRef.Show : null)" Disabled="(dataGrid?.SelectedRow == null || isDeleting)" Loading="isDeleting" Size="Size.Small"> Delete Selected</Button>
-                            <TextEdit @bind-Text="@customFilterValue" Size="Size.Small" Placeholder="Search" />
+                            <Button Color="Color.Primary" Clicked="@ReloadTable" Margin="Margin.Is1" Size="Size.Small" Disabled="RefreshButtonDisabed" Loading="RefreshButtonDisabed"> Refresh</Button>
+                            <Button Color="Color.Success" Clicked="@createWindowRef.Show" Margin="Margin.Is1" Size="Size.Small"> Create</Button>
+                            <Button Color="Color.Danger" Clicked="@(dataGrid?.SelectedRow != null ? removeWindowRef.Show : null)" Margin="Margin.Is1" Disabled="(dataGrid?.SelectedRow == null || isDeleting)" Loading="isDeleting" Size="Size.Small"> Delete Selected</Button>
+                            <TextEdit @bind-Text="@customFilterValue" Margin="Margin.Is1" Size="Size.Small" Placeholder="Search" />
                         </Inline>
                     </FieldBody>
                 </Field>
