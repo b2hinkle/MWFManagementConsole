@@ -186,6 +186,7 @@
     {
         isDeleting = true;
         var result = await Http.PostAsJsonAsync<int>(@"http://localhost:7071/api/DeleteGameInstanceById", dataGrid.SelectedRow.Id, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        await dataGrid.SelectRow(null);
         await ReloadTable();
         removeWindowRef.Hide();
         isDeleting = false;
