@@ -217,6 +217,7 @@
         if (result.IsSuccessStatusCode)
         {
             createWindowRef.Hide();
+            NewGameInstanceToAdd = new GameInstanceModel();
             snackbarGICreated.Show();
             await ReloadTable();    // Fetch the new table data and display it
         }
