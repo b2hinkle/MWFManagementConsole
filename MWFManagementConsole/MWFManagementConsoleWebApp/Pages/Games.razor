@@ -119,8 +119,18 @@
                 <TextEdit @bind-Text="newGameInstanceToAdd.Port" />
             </Field>
             <Field>
-                <FieldLabel>HostId</FieldLabel>
-                <NumericEdit @bind-Value="newGameInstanceToAdd.HostId" />
+                <FieldLabel>Host</FieldLabel>
+                <Select @bind-SelectedValue="newGameInstanceToAdd.HostId" TValue="int">
+                    @{
+                        if (hostModels != null)
+                        {
+                            @foreach (var host in hostModels)
+                            {
+                                <SelectItem Value=@host.Id>@host.Id</SelectItem>
+                            }
+                        }
+                    }
+                </Select>
             </Field>
             <Field>
                 <FieldLabel>Args</FieldLabel>
