@@ -22,7 +22,7 @@
             </Fields>
             <DataGrid TItem="GameInstanceModel"
                       @ref="dataGrid"
-                      Data="@dataModels"
+                      Data="@gameInstanceModels"
                       SortMode="DataGridSortMode.Multiple"
                       Striped="true"
                       Bordered="true"
@@ -120,11 +120,11 @@
             </Field>
             <Field>
                 <FieldLabel>HostId</FieldLabel>
-                <NumericEdit @bind-Value="newGameInstanceToAdd.HostId"/>
+                <NumericEdit @bind-Value="newGameInstanceToAdd.HostId" />
             </Field>
             <Field>
                 <FieldLabel>Args</FieldLabel>
-                <TextEdit @bind-Text="newGameInstanceToAdd.Args"/>
+                <TextEdit @bind-Text="newGameInstanceToAdd.Args" />
             </Field>
         </ModalBody>
         <ModalFooter>
@@ -167,13 +167,13 @@
     Snackbar snackbarGINotCreated;
 
     DataGrid<GameInstanceModel> dataGrid;
-    List<GameInstanceModel> dataModels;
+    List<GameInstanceModel> gameInstanceModels;
+    List<HostModel> hostModels;
     List<string> searchableGames = new List<string>();
     GameInstanceModel newGameInstanceToAdd = new GameInstanceModel();
 
     protected override async Task OnInitializedAsync()
     {
-        @*IEnumerable<HostModel> response = await Http.GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHostModelEndpoint");*@
         await ReloadTable();
     }
 
@@ -230,12 +230,12 @@
         RefreshButtonDisabed = true;
         // Update our GameInstances list
         IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
-        dataModels = new List<GameInstanceModel>(response);
+        gameInstanceModels = new List<GameInstanceModel>(response);
 
 
         // Make sure we have all the games that are currently running. This list is used for the filter dropdown
         searchableGames.Clear();
-        foreach (GameInstanceModel item in dataModels)
+        foreach (GameInstanceModel item in gameInstanceModels)
         {
             string gameName = item.Game.ToString();
             if (searchableGames.Contains(gameName) == false)
@@ -243,6 +243,14 @@
                 searchableGames.Add(gameName);
             }
         }
+
+
+        // How lets get available hosts (used for dropdown/select field when creating GameInstance)
+        @*IEnumerable<HostModel> response = await Http.GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHostModelEndpoint");
+          hostModels = new List<HostModel>(response);*@
+
+
+
 
 
         // always call StateHasChanged!
