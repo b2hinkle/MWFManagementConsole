@@ -156,7 +156,6 @@
 
 @code
 {
-    EditContext AddGIFormContext { get; set; }
     Modal removeWindowRef;
     Modal createWindowRef;
 
@@ -174,8 +173,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Set the form edit context with your model. 
-        AddGIFormContext = new EditContext(NewGameInstanceToAdd);
+
         await ReloadTable();
     }
 
