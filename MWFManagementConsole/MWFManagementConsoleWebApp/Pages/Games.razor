@@ -54,11 +54,17 @@
                         </FilterTemplate>
                     </DataGridColumn>
                     <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.Circle" /> @context.Caption
+                        </CaptionTemplate>
                         <FilterTemplate>
                             <TextEdit Placeholder="Search by Port" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
                         </FilterTemplate>
                     </DataGridColumn>
                     <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Editable="true">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.GripLines" /> @context.Caption
+                        </CaptionTemplate>
                         <FilterTemplate>
                             <TextEdit Placeholder="Search by Args" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
                         </FilterTemplate>
