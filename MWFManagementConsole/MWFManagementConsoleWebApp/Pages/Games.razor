@@ -4,14 +4,7 @@
 
 
 
-@*<h3>Game Instances</h3>
-    @if (gameInstanceArr == null)
-    {
-        <p>Fetching data....</p>
-    }*@
-
-
-
+<h3>Game Instances</h3>
 <CardBody>
     <Row>
         <Column>
@@ -117,7 +110,7 @@
     </CardHeader>
     <CardBody>
         @*Non Blazorise form*@
-        <EditForm Model="@NewGameInstanceToAdd" OnValidSubmit="CreateNewGameInstance">
+        <EditForm EditContext="AddGIFormContext" OnValidSubmit="CreateNewGameInstance">
             <div class="form-group">
                 <label>Game</label>
                 <InputSelect @bind-Value="NewGameInstanceToAdd.Game" class="form-control">
@@ -163,6 +156,9 @@
 
 @code
 {
+    public EditContext AddGIFormContext { get; set; }
+
+
     int pageSize = 50;
     bool isSubmitting;
     Snackbar snackbarSuccess;
@@ -171,9 +167,12 @@
     DataGrid<GameInstanceModel> dataGrid;
     List<GameInstanceModel> dataModels;
     List<string> searchableGames = new List<string>();
+    GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
 
     protected override async Task OnInitializedAsync()
     {
+        // Set the form edit context with your model. 
+        AddGIFormContext = new EditContext(NewGameInstanceToAdd);
         await ReloadTable();
     }
 
@@ -189,13 +188,12 @@
             || model.Port?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
     }
 
-    GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
     async Task CreateNewGameInstance()
     {
         snackbarSuccess.Hide();
         snackbarFailure.Hide();
         isSubmitting = true;
-        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", NewGameInstanceToAdd, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", (GameInstanceModel)AddGIFormContext.Model, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         isSubmitting = false;
         if (result.IsSuccessStatusCode)
         {
@@ -206,6 +204,9 @@
         {
             snackbarFailure.Show();
         }
+
+        // Refresh the Editcontext so validator outlines go away
+        AddGIFormContext = new EditContext(NewGameInstanceToAdd);
     }
 
     async Task ReloadTable()
