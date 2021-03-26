@@ -2,75 +2,258 @@
 @inject HttpClient Http
 @using System.Text.Json
 
-<h3>Game Instances</h3>
-
-<DataGrid TItem="GameInstanceModel"
-          Data="@gameInstanceArr"
-          Sortable="true"
-          ReadData="@OnReadData"
-          TotalItems="@totalGameInstances">
-    <DataGridCommandColumn TItem="GameInstanceModel" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Sortable="false" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Sortable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Sortable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Sortable="true" />
-    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" Sortable="true" />
-</DataGrid>
-
-@*Non Blazorise form*@
-<h3>Create Game Instance</h3>
-<EditForm Model="@NewGameInstanceToAdd" OnValidSubmit="CreateNewGameInstance">
-    <div class="form-group">
-        <label for="Game">Game</label>
-        <InputSelect @bind-Value="NewGameInstanceToAdd.Game" class="form-control">
-            @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
-            {
-                <option>@game.ToString()</option>
-            }
-        </InputSelect>
-    </div>
-    <div class="form-group">
-        <label for="Args">Args</label>
-        <InputText @bind-Value="NewGameInstanceToAdd.Args" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label for="HostId">HostId</label>
-        <InputNumber @bind-Value="NewGameInstanceToAdd.HostId" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-</EditForm>
 
 
+<CardBody>
+    <Row>
+        <Column>
+            <h3>Game Instances</h3>
+            <Fields>
+                <Field>
+                    <FieldBody>
+                        <Inline>
+                            <Button Color="Color.Primary" Clicked="@ReloadTable" Margin="Margin.Is1" Size="Size.Small" Disabled="RefreshButtonDisabed" Loading="RefreshButtonDisabed"> Refresh</Button>
+                            <Button Color="Color.Success" Clicked="@createWindowRef.Show" Margin="Margin.Is1" Size="Size.Small"> Create</Button>
+                            <Button Color="Color.Danger" Clicked="@(dataGrid?.SelectedRow != null ? removeWindowRef.Show : null)" Margin="Margin.Is1" Disabled="(dataGrid?.SelectedRow == null || isDeleting)" Loading="isDeleting" Size="Size.Small"> Delete Selected</Button>
+                            <TextEdit @bind-Text="@customFilterValue" Margin="Margin.Is1" Size="Size.Small" Placeholder="Search" />
+                        </Inline>
+                    </FieldBody>
+                </Field>
+            </Fields>
+            <DataGrid TItem="GameInstanceModel"
+                      @ref="dataGrid"
+                      Data="@dataModels"
+                      SortMode="DataGridSortMode.Multiple"
+                      Striped="true"
+                      Bordered="true"
+                      Hoverable="true"
+                      Filterable="true"
+                      PageSize="@pageSize"
+                      ShowPager="@true"
+                      SelectedRowChanged="@OnSelectedRowChanged"
+                      CustomFilter="@OnCustomFilter">
+                <EmptyTemplate>No records...</EmptyTemplate>
+                <DataGridColumns>
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Editable="true">
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Editable="true">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.Gamepad" /> @context.Caption
+                        </CaptionTemplate>
+                        <FilterTemplate>
+                            @{
+                                var selectedValue = @context.SearchValue ?? "*";
+                                <Select TValue="string" SelectedValue="@selectedValue" SelectedValueChanged="@(e => context.TriggerFilterChange(e == "*" ? "" : e.ToString()))">
+                                    <SelectItem Value="@("*")">All</SelectItem>
+                                    @foreach (string item in searchableGames)
+                                    {
+                                        <SelectItem Value="@item">@item</SelectItem>
+                                    }
+                                </Select>
+                            }
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.Circle" /> @context.Caption
+                        </CaptionTemplate>
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by Port" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Editable="true">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.GripLines" /> @context.Caption
+                        </CaptionTemplate>
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by Args" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </Column>
+    </Row>
+</CardBody>
+
+
+<Modal @ref="removeWindowRef">
+    <ModalContent>
+        <ModalBody>
+            You are about to shut down this game instance and remove it from the database. Would you like to proceed?
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@removeWindowRef.Hide">Close</Button>
+            <Button Loading="isDeleting" Disabled="isDeleting" Color="Color.Danger" Clicked="@ShutDownAndRemove">
+                <Icon Name="IconName.Delete" /> Shutdown and remove
+            </Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="createWindowRef">
+    <ModalContent IsCentered="true">
+        <ModalHeader>
+            <Inline>
+                <Icon Name="IconName.Gamepad" />
+                <ModalTitle> Create Game Instance</ModalTitle>
+            </Inline>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Game</FieldLabel>
+                <Select @bind-SelectedValue="NewGameInstanceToAdd.Game" TValue="MWFModelsLibrary.Enums.Game">
+                    @{
+                        @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
+                        {
+                            <option>@game.ToString()</option>
+                        }
+                    }
+                </Select>
+            </Field>
+            <Field>
+                <FieldLabel>Port</FieldLabel>
+                <TextEdit @bind-Text="NewGameInstanceToAdd.Port" />
+            </Field>
+            <Field>
+                <FieldLabel>HostId</FieldLabel>
+                <NumericEdit @bind-Value="NewGameInstanceToAdd.HostId"/>
+            </Field>
+            <Field>
+                <FieldLabel>Args</FieldLabel>
+                <TextEdit @bind-Text="NewGameInstanceToAdd.Args"/>
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@createWindowRef.Hide">Close</Button>
+            <Button Color="Color.Primary" Clicked="@CreateNewGameInstance">
+                <Icon Name="IconName.Add" /> Create Game Instance
+            </Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+
+
+
+<Snackbar @ref="snackbarGICreated" Color="SnackbarColor.Success">
+    <SnackbarBody>
+        New game instance created successfully!
+        <SnackbarAction Clicked="@(() => snackbarGICreated.Hide())">CLOSE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
+<Snackbar @ref="snackbarGINotCreated" Color="SnackbarColor.Danger">
+    <SnackbarBody>
+        Failed to create new game instance
+        <SnackbarAction Clicked="@(() => snackbarGINotCreated.Hide())">CLOSE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
 
 
 @code
 {
+    EditContext AddGIFormContext { get; set; }
+    Modal removeWindowRef;
+    Modal createWindowRef;
+
+    int pageSize = 50;
+    bool isSubmitting;
+    bool RefreshButtonDisabed;
+    bool isDeleting;
+    Snackbar snackbarGICreated;
+    Snackbar snackbarGINotCreated;
+
+    DataGrid<GameInstanceModel> dataGrid;
+    List<GameInstanceModel> dataModels;
+    List<string> searchableGames = new List<string>();
+    GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
 
     protected override async Task OnInitializedAsync()
     {
-        @*IEnumerable <GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"Get Hosts Endpoint");*@
+        // Set the form edit context with your model. 
+        AddGIFormContext = new EditContext(NewGameInstanceToAdd);
+        await ReloadTable();
     }
 
-    GameInstanceModel NewGameInstanceToAdd = new GameInstanceModel();
+    string customFilterValue;
+    bool OnCustomFilter(GameInstanceModel model)
+    {
+        if (string.IsNullOrEmpty(customFilterValue))
+            return true;
+
+        return
+            model.Id.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.Game.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.Args.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.Port?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
+    }
+
+    void OnSelectedRowChanged()
+    {
+        StateHasChanged();
+    }
+
+    async Task ShutDownAndRemove()
+    {
+        isDeleting = true;
+        var result = await Http.PostAsJsonAsync<int>(@"http://localhost:7071/api/DeleteGameInstanceById", dataGrid.SelectedRow.Id, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        await dataGrid.SelectRow(null);
+        await ReloadTable();
+        removeWindowRef.Hide();
+        isDeleting = false;
+    }
+
     async Task CreateNewGameInstance()
     {
-        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", NewGameInstanceToAdd, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-        if (!result.IsSuccessStatusCode)
+        snackbarGICreated.Hide();
+        snackbarGINotCreated.Hide();
+        isSubmitting = true;
+        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", (GameInstanceModel)AddGIFormContext.Model, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        isSubmitting = false;
+        if (result.IsSuccessStatusCode)
         {
-
+            createWindowRef.Hide();
+            NewGameInstanceToAdd = new GameInstanceModel();
+            snackbarGICreated.Show();
+            await ReloadTable();    // Fetch the new table data and display it
         }
+        else
+        {
+            snackbarGINotCreated.Show();
+        }
+
+        // Refresh the Editcontext so validator outlines go away
+        AddGIFormContext = new EditContext(NewGameInstanceToAdd);
     }
 
-    GameInstanceModel[] gameInstanceArr;
-    int totalGameInstances;
-    async Task OnReadData(DataGridReadDataEventArgs<GameInstanceModel> e)
+    async Task ReloadTable()
     {
+        RefreshButtonDisabed = true;
+        // Update our GameInstances list
         IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
+        dataModels = new List<GameInstanceModel>(response);
 
-        gameInstanceArr = response.ToArray(); // an actual data for the current page
-        totalGameInstances = gameInstanceArr.Length; // this is used to tell datagrid how many items are available so that pagination will work
+
+        // Make sure we have all the games that are currently running. This list is used for the filter dropdown
+        searchableGames.Clear();
+        foreach (GameInstanceModel item in dataModels)
+        {
+            string gameName = item.Game.ToString();
+            if (searchableGames.Contains(gameName) == false)
+            {
+                searchableGames.Add(gameName);
+            }
+        }
+
 
         // always call StateHasChanged!
         StateHasChanged();
+        RefreshButtonDisabed = false;
     }
+
 }
+
