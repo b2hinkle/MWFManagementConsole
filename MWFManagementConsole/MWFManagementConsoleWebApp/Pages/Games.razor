@@ -129,7 +129,9 @@
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Secondary" Clicked="@createWindowRef.Hide">Close</Button>
-            <Button Color="Color.Primary" Clicked="@CreateNewGameInstance">Save Changes</Button>
+            <Button Color="Color.Primary" Clicked="@CreateNewGameInstance">
+                <Icon Name="IconName.Add" /> Create Game Instance
+            </Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
