@@ -86,24 +86,6 @@
 </CardBody>
 
 
-
-
-@*<DataGrid TItem="GameInstanceModel"
-              Data="@gameInstanceArr"
-              ReadData="@OnReadData"
-              TotalItems="@totalGameInstances">
-        <DataGridCommandColumn TItem="GameInstanceModel" />
-        @if (gameInstanceArr != null)
-        {
-            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" />
-            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" />
-            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" />
-            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" />
-            <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.HostId)" Caption="HostId" />
-        }
-    </DataGrid>*@
-
-
 <Card>
     <CardHeader>
         <CardTitle>Create New Game Instance</CardTitle>
