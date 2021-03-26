@@ -72,7 +72,8 @@
                     </DataGridColumn>
                 </DataGridColumns>
             </DataGrid>
-                <Button Color="Color.Danger" Clicked="@(dataGrid?.SelectedRow != null ? removeWindowRef.Show : null)" Disabled="(dataGrid?.SelectedRow == null || isDeleting)" Loading="isDeleting" Size="Size.Small"> Delete Selected</Button>
+            <Button Color="Color.Success" Clicked="@createWindowRef.Show" Size="Size.Small"> Create</Button>
+            <Button Color="Color.Danger" Clicked="@(dataGrid?.SelectedRow != null ? removeWindowRef.Show : null)" Disabled="(dataGrid?.SelectedRow == null || isDeleting)" Loading="isDeleting" Size="Size.Small"> Delete Selected</Button>
         </Column>
     </Row>
 </CardBody>
@@ -89,40 +90,48 @@
     </ModalContent>
 </Modal>
 
-
-<Card>
-    <CardHeader>
-        <CardTitle>Create New Game Instance</CardTitle>
-    </CardHeader>
-    <CardBody>
-        @*Non Blazorise form*@
-        <EditForm EditContext="AddGIFormContext" OnValidSubmit="CreateNewGameInstance">
-            <div class="form-group">
-                <label>Game</label>
-                <InputSelect @bind-Value="NewGameInstanceToAdd.Game" class="form-control">
-                    @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
-                    {
-                        <option>@game.ToString()</option>
+<Modal @ref="createWindowRef">
+    <ModalContent IsCentered="true">
+        <ModalHeader>
+            <Inline>
+                <Icon Name="IconName.Gamepad" />
+                <ModalTitle> Create Game Instance</ModalTitle>
+            </Inline>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Game</FieldLabel>
+                <Select @bind-SelectedValue="NewGameInstanceToAdd.Game" TValue="MWFModelsLibrary.Enums.Game">
+                    @{
+                        @foreach (var game in Enum.GetValues(typeof(MWFModelsLibrary.Enums.Game)))
+                        {
+                            <option>@game.ToString()</option>
+                        }
                     }
-                </InputSelect>
-            </div>
-            <div class="form-group">
-                <label>Port</label>
-                <InputText @bind-Value="NewGameInstanceToAdd.Port" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Args</label>
-                <InputText @bind-Value="NewGameInstanceToAdd.Args" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>HostId</label>
-                <InputNumber @bind-Value="NewGameInstanceToAdd.HostId" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-primary" disabled=@isSubmitting>Create</button>
-        </EditForm>
+                </Select>
+            </Field>
+            <Field>
+                <FieldLabel>Port</FieldLabel>
+                <TextEdit @bind-Text="NewGameInstanceToAdd.Port" />
+            </Field>
+            <Field>
+                <FieldLabel>HostId</FieldLabel>
+                <NumericEdit @bind-Value="NewGameInstanceToAdd.HostId"/>
+            </Field>
+            <Field>
+                <FieldLabel>Args</FieldLabel>
+                <TextEdit @bind-Text="NewGameInstanceToAdd.Args"/>
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@createWindowRef.Hide">Close</Button>
+            <Button Color="Color.Primary" Clicked="@CreateNewGameInstance">Save Changes</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
 
-    </CardBody>
-</Card>
+
 
 
 
@@ -144,6 +153,7 @@
 {
     EditContext AddGIFormContext { get; set; }
     Modal removeWindowRef;
+    Modal createWindowRef;
 
     int pageSize = 50;
     bool isSubmitting;
@@ -198,6 +208,7 @@
         snackbarGINotCreated.Hide();
         isSubmitting = true;
         var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", (GameInstanceModel)AddGIFormContext.Model, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        createWindowRef.Hide();
         isSubmitting = false;
         if (result.IsSuccessStatusCode)
         {
