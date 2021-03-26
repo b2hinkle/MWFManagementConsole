@@ -4,21 +4,20 @@
 
 
 
-<h3>Game Instances</h3>
 <CardBody>
     <Row>
         <Column>
+            <h3>Game Instances</h3>
             <Fields>
                 <Field>
-                    <FieldLabel>
-                        Search
-                    </FieldLabel>
                     <FieldBody>
-                        <TextEdit @bind-Text="@customFilterValue" />
+                        <Inline>
+                            <Button Color="Color.Primary" Clicked="@ReloadTable" Disabled="RefreshButtonDisabed">Refresh</Button>
+                            <TextEdit @bind-Text="@customFilterValue" Placeholder="Search" />
+                        </Inline>
                     </FieldBody>
                 </Field>
             </Fields>
-
             <DataGrid TItem="GameInstanceModel"
                       @ref="dataGrid"
                       Data="@dataModels"
@@ -143,6 +142,7 @@
 
     int pageSize = 50;
     bool isSubmitting;
+    bool RefreshButtonDisabed;
     Snackbar snackbarSuccess;
     Snackbar snackbarFailure;
 
@@ -167,6 +167,7 @@
         return
             model.Id.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
             || model.Game.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.Args.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
             || model.Port?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
     }
 
@@ -193,6 +194,7 @@
 
     async Task ReloadTable()
     {
+        RefreshButtonDisabed = true;
         // Update our GameInstances list
         IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
         dataModels = new List<GameInstanceModel>(response);
@@ -212,6 +214,7 @@
 
         // always call StateHasChanged!
         StateHasChanged();
+        RefreshButtonDisabed = false;
     }
 
 }
