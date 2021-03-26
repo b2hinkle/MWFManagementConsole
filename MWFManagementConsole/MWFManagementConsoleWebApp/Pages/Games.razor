@@ -229,8 +229,8 @@
     {
         RefreshButtonDisabed = true;
         // Update our GameInstances list
-        IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
-        gameInstanceModels = new List<GameInstanceModel>(response);
+        IEnumerable<GameInstanceModel> getGameInstancesResponse = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
+        gameInstanceModels = new List<GameInstanceModel>(getGameInstancesResponse);
 
 
         // Make sure we have all the games that are currently running. This list is used for the filter dropdown
@@ -246,8 +246,8 @@
 
 
         // Now lets get available hosts (used for dropdown/select field when creating GameInstance)
-        @*IEnumerable<HostModel> response = await Http.GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHostModelEndpoint");
-          hostModels = new List<HostModel>(response);*@
+        IEnumerable<HostModel> getHostsResponse = await Http.GetFromJsonAsync<IEnumerable<HostModel>>(@"http://localhost:7071/api/GetHosts");
+        hostModels = new List<HostModel>(getHostsResponse);
 
 
 
