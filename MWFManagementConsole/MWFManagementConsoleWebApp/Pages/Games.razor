@@ -213,10 +213,10 @@
         snackbarGINotCreated.Hide();
         isSubmitting = true;
         var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", (GameInstanceModel)AddGIFormContext.Model, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-        createWindowRef.Hide();
         isSubmitting = false;
         if (result.IsSuccessStatusCode)
         {
+            createWindowRef.Hide();
             snackbarGICreated.Show();
             await ReloadTable();    // Fetch the new table data and display it
         }
