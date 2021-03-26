@@ -12,7 +12,7 @@
                 <Field>
                     <FieldBody>
                         <Inline>
-                            <Button Color="Color.Primary" Clicked="@ReloadTable" Disabled="RefreshButtonDisabed">Refresh</Button>
+                            <Button Color="Color.Primary" Clicked="@ReloadTable" Disabled="RefreshButtonDisabed" Loading="RefreshButtonDisabed"> Refresh</Button>
                             <TextEdit @bind-Text="@customFilterValue" Placeholder="Search" />
                         </Inline>
                     </FieldBody>
