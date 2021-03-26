@@ -53,12 +53,12 @@
                         </ClearFilterCommandTemplate>
                     </DataGridCommandColumn>
 
-                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Id )" Caption="Id" Editable="true">
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Id)" Caption="Id" Editable="true">
                         <FilterTemplate>
-                            <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                            <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
                         </FilterTemplate>
                     </DataGridColumn>
-                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Game )" Caption="Game" Editable="true">
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Editable="true">
                         <CaptionTemplate>
                             <Icon Name="IconName.Gamepad" /> @context.Caption
                         </CaptionTemplate>
@@ -75,14 +75,14 @@
                             }
                         </FilterTemplate>
                     </DataGridColumn>
-                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Port )" Caption="Port" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Port)" Caption="Port" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
                         <FilterTemplate>
-                            <TextEdit Placeholder="Search by Port" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                            <TextEdit Placeholder="Search by Port" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
                         </FilterTemplate>
                     </DataGridColumn>
-                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof( GameInstanceModel.Args )" Caption="Args" Editable="true">
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Args)" Caption="Args" Editable="true">
                         <FilterTemplate>
-                            <TextEdit Placeholder="Search by Args" Text="@context.SearchValue" TextChanged="@(v=> context.TriggerFilterChange(v))" />
+                            <TextEdit Placeholder="Search by Args" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
                         </FilterTemplate>
                     </DataGridColumn>
                 </DataGridColumns>
@@ -150,13 +150,13 @@
 <Snackbar @ref="snackbarSuccess" Color="SnackbarColor.Success">
     <SnackbarBody>
         New game instance running
-        <SnackbarAction Clicked="@(()=>snackbarSuccess.Hide())">CLOSE</SnackbarAction>
+        <SnackbarAction Clicked="@(() => snackbarSuccess.Hide())">CLOSE</SnackbarAction>
     </SnackbarBody>
 </Snackbar>
 <Snackbar @ref="snackbarFailure" Color="SnackbarColor.Danger">
     <SnackbarBody>
         Failed to create and run new game instance
-        <SnackbarAction Clicked="@(()=>snackbarFailure.Hide())">CLOSE</SnackbarAction>
+        <SnackbarAction Clicked="@(() => snackbarFailure.Hide())">CLOSE</SnackbarAction>
     </SnackbarBody>
 </Snackbar>
 
@@ -174,25 +174,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
-
-        dataModels = new List<GameInstanceModel>(response); // an actual data for the current page
-
-
-
-        foreach (GameInstanceModel item in dataModels)
-        {
-            string gameName = item.Game.ToString();
-            if (searchableGames.Contains(gameName) == false)
-            {
-                searchableGames.Add(gameName);
-            }
-        }
-
-
-
-        // always call StateHasChanged!
-        StateHasChanged();
+        await ReloadTable();
     }
 
     string customFilterValue;
@@ -218,6 +200,7 @@
         if (result.IsSuccessStatusCode)
         {
             snackbarSuccess.Show();
+            await ReloadTable();    // Fetch the new table data and display it
         }
         else
         {
@@ -225,8 +208,28 @@
         }
     }
 
-    Task Reload()
+    async Task ReloadTable()
     {
-        return dataGrid.Reload();
+        // Update our GameInstances list
+        IEnumerable<GameInstanceModel> response = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
+        dataModels = new List<GameInstanceModel>(response);
+
+
+        // Make sure we have all the games that are currently running. This list is used for the filter dropdown
+        searchableGames.Clear();
+        foreach (GameInstanceModel item in dataModels)
+        {
+            string gameName = item.Game.ToString();
+            if (searchableGames.Contains(gameName) == false)
+            {
+                searchableGames.Add(gameName);
+            }
+        }
+
+
+        // always call StateHasChanged!
+        StateHasChanged();
     }
+
 }
+
