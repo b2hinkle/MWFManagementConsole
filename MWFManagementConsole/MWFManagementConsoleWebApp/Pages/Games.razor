@@ -71,6 +71,7 @@
                     </DataGridColumn>
                 </DataGridColumns>
             </DataGrid>
+            <Button Color="Color.Danger" Clicked="@DeleteSelected" Disabled="DeleteButtonDisabled" Loading="DeleteButtonDisabled" Size="Size.Small"> Delete Selected</Button>
         </Column>
     </Row>
 </CardBody>
@@ -134,6 +135,7 @@
     int pageSize = 50;
     bool isSubmitting;
     bool RefreshButtonDisabed;
+    bool DeleteButtonDisabled;
     Snackbar snackbarSuccess;
     Snackbar snackbarFailure;
 
@@ -160,6 +162,15 @@
             || model.Game.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
             || model.Args.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
             || model.Port?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
+    }
+
+    async Task DeleteSelected()
+    {
+        DeleteButtonDisabled = true;
+        var result = await Http.PostAsJsonAsync<int>(@"http://localhost:7071/api/DeleteGameInstanceById", dataGrid.SelectedRow.Id, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        await ReloadTable();
+        DeleteButtonDisabled = false;
+
     }
 
     async Task CreateNewGameInstance()
