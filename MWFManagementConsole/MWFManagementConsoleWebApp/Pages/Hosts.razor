@@ -1,74 +1,118 @@
 ﻿@page "/Hosts"
-@using MWFModelsLibrary.Models;
-
-<h3>Hosts</h3>
-
-<div class="col-md-2 float-right">
-    <a class="btn btn-primary" asp-controller="Servers" asp-action="AddServer">Add Server</a>
-    <a class="btn btn-light" asp-controller="Servers" asp-action="Refresh">Refresh</a>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-          <th>
-              @*@Html.DisplayNameFor(model => model.Id)*@   Id
-          </th>
-          <th>
-              @*@Html.DisplayNameFor(model => model.ServerIP)*@ HostIp
-          </th>
-          <th>
-              @*@Html.DisplayNameFor(model => model.GameInstancesManagementApiIp)*@   AssociatedHostServicesApiIp
-          </th>
-          <th>
-              @*@Html.DisplayNameFor(model => model.GameInstancesManagementApiPort)*@ AssociatedHostServicesApiPort
-          </th>
-          <th>
-                @*@Html.DisplayNameFor(model => model.IsActive)*@   IsActive
-            </th>
-      </tr>
-  </thead>
-@*    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ServerIP)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GameInstancesManagementApiIp)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GameInstancesManagementApiPort)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsActive)
-                </td>
-                <td>
-                    <form asp-controller="Servers" asp-action="EditServer" method="post">
-                        <input type="hidden" name="serverIP" value="@item.ServerIP" />
-                        <button type="submit" name="button">Edit</button>
-                    </form>
-                    <form asp-controller="Servers" asp-action="Delete" method="post">
-                        <input type="hidden" name="serverIP" value="@item.ServerIP" />
-                        <button type="submit" name="button">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>*@
-</table>
+@inject HttpClient Http
+@using System.Text.Json
 
 
-@code {
-@*   
-    //This was just me seeing what was in the models
-    MWFModelsLibrary.Models. gi  = new GameInstanceModel();
-    void s()
+
+<CardBody>
+    <Row>
+        <Column>
+            <h3>Hosts</h3>
+            <Fields>
+                <Field>
+                    <FieldBody>
+                        <Inline>
+                            <Button Color="Color.Primary" Clicked="@ReloadTable" Margin="Margin.Is1" Size="Size.Small" Disabled="RefreshButtonDisabed" Loading="RefreshButtonDisabed"> Refresh</Button>
+                            <TextEdit @bind-Text="@customFilterValue" Margin="Margin.Is1" Size="Size.Small" Placeholder="Search" />
+                        </Inline>
+                    </FieldBody>
+                </Field>
+            </Fields>
+            <DataGrid TItem="HostModel"
+                      @ref="dataGrid"
+                      Data="@hostModels"
+                      SortMode="DataGridSortMode.Multiple"
+                      Striped="true"
+                      Bordered="true"
+                      Hoverable="true"
+                      Filterable="true"
+                      PageSize="@pageSize"
+                      ShowPager="@true"
+                      SelectedRowChanged="@OnSelectedRowChanged"
+                      CustomFilter="@OnCustomFilter">
+                <EmptyTemplate>No records...</EmptyTemplate>
+                <DataGridColumns>
+                    <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.Id)" Caption="Id" Editable="true">
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.HostIp)" Caption="HostIp" Editable="true">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.Server" /> @context.Caption
+                        </CaptionTemplate>
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by Ip" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.HostServicesAPISocketAddress)" Caption="HostServicesAPISocketAddress" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.Server" /> @context.Caption
+                        </CaptionTemplate>
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by HostServicesAPISocketAddress" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                    <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.IsActive)" Caption="IsActive" Editable="true">
+                        <CaptionTemplate>
+                            <Icon Name="IconName.GripLines" /> @context.Caption
+                        </CaptionTemplate>
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by IsActive" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </Column>
+    </Row>
+</CardBody>
+
+
+@code
+{
+    int pageSize = 50;
+    bool RefreshButtonDisabed;
+
+    DataGrid<HostModel> dataGrid;
+    List<HostModel> hostModels;
+    HostModel newHostToAdd = new HostModel();
+
+    protected override async Task OnInitializedAsync()
     {
-        gi.AssociatedHost
-    }*@
+        await ReloadTable();
+    }
+
+    string customFilterValue;
+    bool OnCustomFilter(HostModel model)
+    {
+        if (string.IsNullOrEmpty(customFilterValue))
+            return true;
+
+        return
+            model.Id.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.HostIp.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.HostServicesAPISocketAddress.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.IsActive.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
+    }
+
+    void OnSelectedRowChanged()
+    {
+        StateHasChanged();
+    }
+
+
+    async Task ReloadTable()
+    {
+        RefreshButtonDisabed = true;
+        // Update our Hosts list
+        IEnumerable<HostModel> getHostsResponse = await Http.GetFromJsonAsync<IEnumerable<HostModel>>(@"http://localhost:7071/api/GetHosts");
+        hostModels = new List<HostModel>(getHostsResponse);
+
+
+        // always call StateHasChanged!
+        StateHasChanged();
+        RefreshButtonDisabed = false;
+    }
 
 }
+
