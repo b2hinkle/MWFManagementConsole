@@ -220,7 +220,7 @@
         snackbarGICreated.Hide();
         snackbarGINotCreated.Hide();
         isSubmitting = true;
-        var result = await Http.PostAsJsonAsync<GameInstanceModel>(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", newGameInstanceToAdd, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var result = await Http.PostAsJsonAsync(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", new { Game = (int)(newGameInstanceToAdd.Game), Port = newGameInstanceToAdd.Port, Args = newGameInstanceToAdd.Args, HostId = newGameInstanceToAdd.HostId }, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         isSubmitting = false;
         if (result.IsSuccessStatusCode)
         {
