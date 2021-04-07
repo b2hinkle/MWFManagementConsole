@@ -208,7 +208,7 @@
     async Task ShutDownAndRemove()
     {
         isDeleting = true;
-        var result = await Http.PostAsJsonAsync<int>(@"http://localhost:7071/api/DeleteGameInstanceById", dataGrid.SelectedRow.Id, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var result = await Http.DeleteAsync(@"http://localhost:7071/api/DeleteGameInstanceById/?Id=" + dataGrid.SelectedRow.Id);
         await dataGrid.SelectRow(null);
         await ReloadTable();
         removeWindowRef.Hide();
