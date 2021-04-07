@@ -39,6 +39,11 @@
                             <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
                         </FilterTemplate>
                     </DataGridColumn>
+                    <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.ProcessId)" Caption="ProcessId" Editable="true">
+                        <FilterTemplate>
+                            <TextEdit Placeholder="Search by ProcessId" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                        </FilterTemplate>
+                    </DataGridColumn>
                     <DataGridColumn TItem="GameInstanceModel" Field="@nameof(GameInstanceModel.Game)" Caption="Game" Editable="true">
                         <CaptionTemplate>
                             <Icon Name="IconName.Gamepad" /> @context.Caption
@@ -195,6 +200,7 @@
 
         return
             model.Id.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+            || model.ProcessId.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
             || model.Game.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
             || model.Args.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
             || model.Port?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;

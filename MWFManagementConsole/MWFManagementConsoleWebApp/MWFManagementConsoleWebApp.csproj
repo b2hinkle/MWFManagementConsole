@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <Reference Include="MWFModelsLibrary">
-      <HintPath>..\..\..\MultiplayerWebFramework\MultiplayerWebFramework\MWFModelsLibrary\bin\Debug\net5.0\MWFModelsLibrary.dll</HintPath>
+      <HintPath>..\..\..\MWFDatabaseServices\MWFDatabaseServices\MWFDataLibrary\bin\Debug\netstandard2.0\MWFModelsLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 
