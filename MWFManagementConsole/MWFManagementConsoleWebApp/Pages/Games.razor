@@ -168,6 +168,19 @@
     </SnackbarBody>
 </Snackbar>
 
+<Snackbar @ref="snackbarGIRemoved" Color="SnackbarColor.Success">
+    <SnackbarBody>
+        Game instance successfully removed
+        <SnackbarAction Clicked="@(() => snackbarGICreated.Hide())">CLOSE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
+<Snackbar @ref="snackbarGINotRemoved" Color="SnackbarColor.Danger">
+    <SnackbarBody>
+        Failed to remove and shutdown game instance
+        <SnackbarAction Clicked="@(() => snackbarGINotCreated.Hide())">CLOSE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
+
 
 @code
 {
@@ -180,6 +193,9 @@
     bool isDeleting;
     Snackbar snackbarGICreated;
     Snackbar snackbarGINotCreated;
+
+    Snackbar snackbarGIRemoved;
+    Snackbar snackbarGINotRemoved;
 
     DataGrid<GameInstanceModel> dataGrid;
     List<GameInstanceModel> gameInstanceModels;
@@ -214,11 +230,23 @@
     async Task ShutDownAndRemove()
     {
         isDeleting = true;
-        var result = await Http.DeleteAsync(@"http://localhost:7071/api/DeleteGameInstanceById/?Id=" + dataGrid.SelectedRow.Id);
-        await dataGrid.SelectRow(null);
-        await ReloadTable();
-        removeWindowRef.Hide();
+        var result = await Http.DeleteAsync(@"https://localhost:5001/api/Cluster/ShutDownGameInstanceById/" + dataGrid.SelectedRow.Id);
+
+        // Hide the remove snackbars if any are currently showing before we pop a new one up
+        snackbarGIRemoved.Hide();
+        snackbarGINotRemoved.Hide();
         isDeleting = false;
+        if (result.IsSuccessStatusCode)
+        {
+            removeWindowRef.Hide();
+            snackbarGIRemoved.Show();
+            await dataGrid.SelectRow(null);
+            await ReloadTable();
+        }
+        else
+        {
+            snackbarGINotRemoved.Show();
+        }
     }
 
     async Task CreateNewGameInstance()
@@ -226,7 +254,7 @@
         snackbarGICreated.Hide();
         snackbarGINotCreated.Hide();
         isSubmitting = true;
-        var result = await Http.PostAsJsonAsync(@"http://localhost:7071/api/CreateGameInstanceAndReturnId", new { Game = (int)(newGameInstanceToAdd.Game), Port = newGameInstanceToAdd.Port, Args = newGameInstanceToAdd.Args, HostId = newGameInstanceToAdd.HostId }, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var result = await Http.PostAsJsonAsync(@"https://localhost:5001/api/Cluster/SpinUpGameInstance/", new { Game = (int)(newGameInstanceToAdd.Game), Port = newGameInstanceToAdd.Port, Args = newGameInstanceToAdd.Args, HostId = newGameInstanceToAdd.HostId }, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         isSubmitting = false;
         if (result.IsSuccessStatusCode)
         {
