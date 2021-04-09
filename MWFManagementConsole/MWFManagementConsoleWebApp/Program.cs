@@ -17,8 +17,23 @@ namespace MWFManagementConsoleWebApp
 {
     public class Program
     {
+        private static async Task DebugDelayAsync()
+        {
+#if DEBUG
+            await Task.Delay(5000);
+#endif
+        }
+
+
+
         public static async Task Main(string[] args)
         {
+            // This is a temporary solution to debugger sometimes not working until Microsoft fixes this Blazor bug
+            await DebugDelayAsync();
+
+
+
+
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
                 builder.Services
@@ -31,14 +46,14 @@ namespace MWFManagementConsoleWebApp
 
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+            builder.Services.AddHttpClient<HostServicesHttpClient>();
+
+            builder.Services.AddHttpClient<DatabaseServicesHttpClient>();
+
 
             /*await builder.Build().RunAsync();*/   // This was commented out because we need to first add servuces before we RunAsync()
             var host = builder.Build();
-
-            host.Services
-              .UseBootstrapProviders()
-              .UseFontAwesomeIcons();
 
             await host.RunAsync();
         }
