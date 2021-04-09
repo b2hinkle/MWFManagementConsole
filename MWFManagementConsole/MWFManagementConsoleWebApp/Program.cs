@@ -46,7 +46,11 @@ namespace MWFManagementConsoleWebApp
 
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+            builder.Services.AddHttpClient<HostServicesHttpClient>();
+
+            builder.Services.AddHttpClient<DatabaseServicesHttpClient>();
+
 
             /*await builder.Build().RunAsync();*/   // This was commented out because we need to first add servuces before we RunAsync()
             var host = builder.Build();

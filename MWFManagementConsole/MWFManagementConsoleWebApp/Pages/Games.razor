@@ -1,6 +1,8 @@
 ﻿@page "/Games"
-@inject HttpClient Http
+@inject HostServicesHttpClient hostServicesHttpClient;
+@inject DatabaseServicesHttpClient DatabaseServicesHttpClient;
 @using System.Text.Json
+@using System.Net.Http.Headers;
 
 
 
@@ -230,7 +232,7 @@
     async Task ShutDownAndRemove()
     {
         isDeleting = true;
-        var result = await Http.DeleteAsync(@"https://localhost:5001/api/Cluster/ShutDownGameInstanceById/" + dataGrid.SelectedRow.Id);
+        var result = await hostServicesHttpClient.GetClient().DeleteAsync(@"Cluster/ShutDownGameInstanceById/" + dataGrid.SelectedRow.Id);
 
         // Hide the remove snackbars if any are currently showing before we pop a new one up
         snackbarGIRemoved.Hide();
@@ -254,7 +256,7 @@
         snackbarGICreated.Hide();
         snackbarGINotCreated.Hide();
         isSubmitting = true;
-        var result = await Http.PostAsJsonAsync(@"https://localhost:5001/api/Cluster/SpinUpGameInstance/", new { Game = (int)(newGameInstanceToAdd.Game), Port = newGameInstanceToAdd.Port, Args = newGameInstanceToAdd.Args, HostId = newGameInstanceToAdd.HostId }, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var result = await hostServicesHttpClient.GetClient().PostAsJsonAsync(@"Cluster/SpinUpGameInstance/", new { Game = (int)(newGameInstanceToAdd.Game), Port = newGameInstanceToAdd.Port, Args = newGameInstanceToAdd.Args, HostId = newGameInstanceToAdd.HostId }, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         isSubmitting = false;
         if (result.IsSuccessStatusCode)
         {
@@ -273,7 +275,7 @@
     {
         RefreshButtonDisabed = true;
         // Update our GameInstances list
-        IEnumerable<GameInstanceModel> getGameInstancesResponse = await Http.GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"http://localhost:7071/api/GetGameInstances");
+        IEnumerable<GameInstanceModel> getGameInstancesResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"GetGameInstances");
         gameInstanceModels = new List<GameInstanceModel>(getGameInstancesResponse);
 
 
@@ -290,7 +292,7 @@
 
 
         // Now lets get available hosts (used for dropdown/select field when creating GameInstance)
-        IEnumerable<HostModel> getHostsResponse = await Http.GetFromJsonAsync<IEnumerable<HostModel>>(@"http://localhost:7071/api/GetHosts");
+        IEnumerable<HostModel> getHostsResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHosts");
         hostModels = new List<HostModel>(getHostsResponse);
 
 
