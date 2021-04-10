@@ -1,2 +1,2 @@
 # MWFManagementConsole
-Management console that provides a GUI allowing you to modify/monitor each Host and its corresponding Cluster.
+Management console that provides a GUI allowing the developer to view Host information and currently active Game Instances
