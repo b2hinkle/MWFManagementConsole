@@ -1,2 +1,2 @@
 # MWFManagementConsole
-Management console that provides a GUI allowing the developer to view Host information and currently active Game Instances
+A website serving as a frontend interface between the developer and web APIs for managing and monitoring hosts and game instances.
