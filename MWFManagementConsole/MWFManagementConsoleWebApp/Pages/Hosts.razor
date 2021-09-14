@@ -67,9 +67,20 @@
     </Row>
 </CardBody>
 
+<Modal @ref="databaseServicesNotificationRef">
+    <ModalContent>
+        <ModalBody>
+            <Icon Name="IconName.InfoCircle" /> <b>Database Services API seems to be offline</b>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Info" Clicked="@databaseServicesNotificationRef.Hide">Got it</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
 
 @code
 {
+    Modal databaseServicesNotificationRef;
     int pageSize = 50;
     bool RefreshButtonDisabed;
 
@@ -105,8 +116,17 @@
     {
         RefreshButtonDisabed = true;
         // Update our Hosts list
-        IEnumerable<HostModel> getHostsResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHosts");
-        hostModels = new List<HostModel>(getHostsResponse);
+        try
+        {
+            IEnumerable<HostModel> getHostsResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHosts");
+            hostModels = new List<HostModel>(getHostsResponse);
+        }
+        catch (Exception e)
+        {
+            // DatabaseServicesAPI is probably offline. In that case MWF is probably not even being used right now
+            databaseServicesNotificationRef.Show();
+        }
+
 
 
         // always call StateHasChanged!
