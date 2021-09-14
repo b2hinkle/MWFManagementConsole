@@ -184,8 +184,20 @@
 </Snackbar>
 
 
+<Modal @ref="databaseServicesNotificationRef">
+    <ModalContent>
+        <ModalBody>
+            <Icon Name="IconName.InfoCircle" /> <b>Database Services API seems to be offline</b>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Info" Clicked="@databaseServicesNotificationRef.Hide">Got it</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
 @code
 {
+    Modal databaseServicesNotificationRef;
     Modal removeWindowRef;
     Modal createWindowRef;
 
@@ -256,44 +268,80 @@
         snackbarGICreated.Hide();
         snackbarGINotCreated.Hide();
         isSubmitting = true;
-        var result = await hostServicesHttpClient.GetClient().PostAsJsonAsync(@"Cluster/SpinUpGameInstance/", new { Game = (int)(newGameInstanceToAdd.Game), Port = newGameInstanceToAdd.Port, Args = newGameInstanceToAdd.Args, HostId = newGameInstanceToAdd.HostId }, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-        isSubmitting = false;
-        if (result.IsSuccessStatusCode)
+        try
         {
+            var result = await hostServicesHttpClient.GetClient().PostAsJsonAsync(@"Cluster/SpinUpGameInstance/", new { Game = (int)(newGameInstanceToAdd.Game), Port = newGameInstanceToAdd.Port, Args = newGameInstanceToAdd.Args, HostId = newGameInstanceToAdd.HostId }, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            isSubmitting = false;
+            if (result.IsSuccessStatusCode)
+            {
+                createWindowRef.Hide();
+                newGameInstanceToAdd = new GameInstanceModel();
+                snackbarGICreated.Show();
+                await ReloadTable();    // Fetch the new table data and display it
+            }
+            else
+            {
+                snackbarGINotCreated.Show();
+            }
+        }
+        catch (Exception e)
+        {
+            isSubmitting = false;
             createWindowRef.Hide();
-            newGameInstanceToAdd = new GameInstanceModel();
-            snackbarGICreated.Show();
-            await ReloadTable();    // Fetch the new table data and display it
-        }
-        else
-        {
+            // DatabaseServicesAPI is probably offline. In that case MWF is probably not even being used right now
+            databaseServicesNotificationRef.Show();
             snackbarGINotCreated.Show();
+
         }
+
+
     }
 
     async Task ReloadTable()
     {
         RefreshButtonDisabed = true;
         // Update our GameInstances list
-        IEnumerable<GameInstanceModel> getGameInstancesResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"GetGameInstances");
-        gameInstanceModels = new List<GameInstanceModel>(getGameInstancesResponse);
+
+        try
+        {
+            IEnumerable<GameInstanceModel> getGameInstancesResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<GameInstanceModel>>(@"GetGameInstances");
+            gameInstanceModels = new List<GameInstanceModel>(getGameInstancesResponse);
+        }
+        catch (Exception e)
+        {
+            // DatabaseServicesAPI is probably offline. In that case MWF is probably not even being used right now
+            databaseServicesNotificationRef.Show();
+        }
 
 
         // Make sure we have all the games that are currently running. This list is used for the filter dropdown
         searchableGames.Clear();
-        foreach (GameInstanceModel item in gameInstanceModels)
+        if (gameInstanceModels != null)
         {
-            string gameName = item.Game.ToString();
-            if (searchableGames.Contains(gameName) == false)
+            foreach (GameInstanceModel item in gameInstanceModels)
             {
-                searchableGames.Add(gameName);
+                string gameName = item.Game.ToString();
+                if (searchableGames.Contains(gameName) == false)
+                {
+                    searchableGames.Add(gameName);
+                }
             }
         }
 
 
-        // Now lets get available hosts (used for dropdown/select field when creating GameInstance)
-        IEnumerable<HostModel> getHostsResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHosts");
-        hostModels = new List<HostModel>(getHostsResponse);
+
+        try
+        {
+            // Now lets get available hosts (used for dropdown/select field when creating GameInstance)
+            IEnumerable<HostModel> getHostsResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHosts");
+            hostModels = new List<HostModel>(getHostsResponse);
+        }
+        catch (Exception e)
+        {
+            // DatabaseServicesAPI is probably offline. In that case MWF is probably not even being used right now
+            databaseServicesNotificationRef.Show();
+        }
+
 
 
 
@@ -303,6 +351,8 @@
         StateHasChanged();
         RefreshButtonDisabed = false;
     }
+
+
 
 }
 
