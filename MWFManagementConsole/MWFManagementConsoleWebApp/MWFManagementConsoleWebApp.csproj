@@ -16,13 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="MWFModelsLibrary">
-      <HintPath>..\..\..\MWFDatabaseServices\MWFDatabaseServices\MWFDataLibrary\bin\Debug\netstandard2.0\MWFModelsLibrary.dll</HintPath>
-    </Reference>
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
+    <Reference Include="MWFModelsLibrary">
+      <HintPath>..\..\..\MWFHostServices\MWFHostServices\MWFModelsLibrary\bin\Debug\netstandard2.0\MWFModelsLibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
