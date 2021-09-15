@@ -1,27 +1,36 @@
 ﻿@page "/"
 
 <div class="container">
-    <div class="row align-items-center">
-        <div class="col-md-8 offset-md-2">
-            <h1 class="text-center">Welcome to the developer's management console!</h1>
+    <Animate Animation="Animations.FadeUp" Easing="Easings.Ease" Duration="TimeSpan.FromSeconds(0.5)" Delay="TimeSpan.FromSeconds(0)">
+        <div class="row align-items-center">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="text-center">Welcome to the developer's management console!</h1>
+            </div>
         </div>
-    </div>
-    <div class="row align-items-center">
-        <div class="col-md-8 offset-md-2">
-            <p class="text-center">This is your headquarters for managing your servers!</p>
+    </Animate>
+    <Animate Animation="Animations.FadeUp" Easing="Easings.Ease" Duration="TimeSpan.FromSeconds(0.5)" Delay="TimeSpan.FromSeconds(.1)">
+        <div class="row align-items-center">
+            <div class="col-md-8 offset-md-2">
+                <p class="text-center">This is your headquarters for managing your servers!</p>
+            </div>
         </div>
-    </div>
-    <hr />
-    <div class="row align-items-center">
-        <div class="col-md-6">
-            <h2 class="text-center">Demonstration Video</h2>
-            <p class="text-center center">For a full walkthrough on how to use, check out the demo video!</p>
+    </Animate>
+    <Animate Animation="Animations.FadeUp" Easing="Easings.Ease" Duration="TimeSpan.FromSeconds(0.5)" Delay="TimeSpan.FromSeconds(.2)">
+        <hr />
+    </Animate>
+    <Animate Animation="Animations.FadeUp" Easing="Easings.Ease" Duration="TimeSpan.FromSeconds(0.5)" Delay="TimeSpan.FromSeconds(.3)">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="text-center">Demonstration Video</h2>
+                <p class="text-center center">For a full walkthrough on how to use, check out the demo video!</p>
+            </div>
+            <div class="col-md-6">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/wAIStc3JcEE" title="YouTube video player" frameborder="1" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="text-center"></iframe>
+            </div>
         </div>
-        <div class="col-md-6">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/wAIStc3JcEE" title="YouTube video player" frameborder="1" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="text-center"></iframe>
-        </div>
-    </div>
+    </Animate>
 </div>
-<hr />
-
+<Animate Animation="Animations.FadeUp" Easing="Easings.Ease" Duration="TimeSpan.FromSeconds(0.5)" Delay="TimeSpan.FromSeconds(.4)">
+    <hr />
+</Animate>
 
