@@ -4,135 +4,137 @@
 
 
 
-<CardBody>
-    <Row>
-        <Column>
-            <h3>Hosts</h3>
-            <Fields>
-                <Field>
-                    <FieldBody>
-                        <Inline>
-                            <Button Color="Color.Primary" Clicked="@ReloadTable" Margin="Margin.Is1" Size="Size.Small" Disabled="RefreshButtonDisabed" Loading="RefreshButtonDisabed"> Refresh</Button>
-                            <TextEdit @bind-Text="@customFilterValue" Margin="Margin.Is1" Size="Size.Small" Placeholder="Search" />
-                        </Inline>
-                    </FieldBody>
-                </Field>
-            </Fields>
-            <DataGrid TItem="HostModel"
-                      @ref="dataGrid"
-                      Data="@hostModels"
-                      SortMode="DataGridSortMode.Multiple"
-                      Striped="true"
-                      Bordered="true"
-                      Hoverable="true"
-                      Filterable="true"
-                      PageSize="@pageSize"
-                      ShowPager="@true"
-                      SelectedRowChanged="@OnSelectedRowChanged"
-                      CustomFilter="@OnCustomFilter">
-                <EmptyTemplate>No records...</EmptyTemplate>
-                <DataGridColumns>
-                    <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.Id)" Caption="Id" Editable="true">
-                        <FilterTemplate>
-                            <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
-                        </FilterTemplate>
-                    </DataGridColumn>
-                    <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.HostIp)" Caption="HostIp" Editable="true">
-                        <CaptionTemplate>
-                            <Icon Name="IconName.Server" /> @context.Caption
-                        </CaptionTemplate>
-                        <FilterTemplate>
-                            <TextEdit Placeholder="Search by Ip" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
-                        </FilterTemplate>
-                    </DataGridColumn>
-                    <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.HostServicesAPISocketAddress)" Caption="HostServicesAPISocketAddress" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
-                        <CaptionTemplate>
-                            <Icon Name="IconName.Server" /> @context.Caption
-                        </CaptionTemplate>
-                        <FilterTemplate>
-                            <TextEdit Placeholder="Search by HostServicesAPISocketAddress" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
-                        </FilterTemplate>
-                    </DataGridColumn>
-                    <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.IsActive)" Caption="IsActive" Editable="true">
-                        <CaptionTemplate>
-                            <Icon Name="IconName.GripLines" /> @context.Caption
-                        </CaptionTemplate>
-                        <FilterTemplate>
-                            <TextEdit Placeholder="Search by IsActive" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
-                        </FilterTemplate>
-                    </DataGridColumn>
-                </DataGridColumns>
-            </DataGrid>
-        </Column>
-    </Row>
-</CardBody>
+<Animate Animation="Animations.Fade" Easing="Easings.Ease" Duration="TimeSpan.FromSeconds(0.5)">
+    <CardBody>
+        <Row>
+            <Column>
+                <h3>Hosts</h3>
+                <Fields>
+                    <Field>
+                        <FieldBody>
+                            <Inline>
+                                <Button Color="Color.Primary" Clicked="@ReloadTable" Margin="Margin.Is1" Size="Size.Small" Disabled="RefreshButtonDisabed" Loading="RefreshButtonDisabed"> Refresh</Button>
+                                <TextEdit @bind-Text="@customFilterValue" Margin="Margin.Is1" Size="Size.Small" Placeholder="Search" />
+                            </Inline>
+                        </FieldBody>
+                    </Field>
+                </Fields>
+                <DataGrid TItem="HostModel"
+                          @ref="dataGrid"
+                          Data="@hostModels"
+                          SortMode="DataGridSortMode.Multiple"
+                          Striped="true"
+                          Bordered="true"
+                          Hoverable="true"
+                          Filterable="true"
+                          PageSize="@pageSize"
+                          ShowPager="@true"
+                          SelectedRowChanged="@OnSelectedRowChanged"
+                          CustomFilter="@OnCustomFilter">
+                    <EmptyTemplate>No records...</EmptyTemplate>
+                    <DataGridColumns>
+                        <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.Id)" Caption="Id" Editable="true">
+                            <FilterTemplate>
+                                <TextEdit Placeholder="Search by Id" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                            </FilterTemplate>
+                        </DataGridColumn>
+                        <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.HostIp)" Caption="HostIp" Editable="true">
+                            <CaptionTemplate>
+                                <Icon Name="IconName.Server" /> @context.Caption
+                            </CaptionTemplate>
+                            <FilterTemplate>
+                                <TextEdit Placeholder="Search by Ip" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                            </FilterTemplate>
+                        </DataGridColumn>
+                        <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.HostServicesAPISocketAddress)" Caption="HostServicesAPISocketAddress" Editable="true" PopupFieldColumnSize="ColumnSize.IsFull.OnDesktop">
+                            <CaptionTemplate>
+                                <Icon Name="IconName.Server" /> @context.Caption
+                            </CaptionTemplate>
+                            <FilterTemplate>
+                                <TextEdit Placeholder="Search by HostServicesAPISocketAddress" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                            </FilterTemplate>
+                        </DataGridColumn>
+                        <DataGridColumn TItem="HostModel" Field="@nameof(HostModel.IsActive)" Caption="IsActive" Editable="true">
+                            <CaptionTemplate>
+                                <Icon Name="IconName.GripLines" /> @context.Caption
+                            </CaptionTemplate>
+                            <FilterTemplate>
+                                <TextEdit Placeholder="Search by IsActive" Text="@context.SearchValue" TextChanged="@(v => context.TriggerFilterChange(v))" />
+                            </FilterTemplate>
+                        </DataGridColumn>
+                    </DataGridColumns>
+                </DataGrid>
+            </Column>
+        </Row>
+    </CardBody>
+</Animate>
 
-<Modal @ref="databaseServicesNotificationRef">
-    <ModalContent>
-        <ModalBody>
-            <Icon Name="IconName.InfoCircle" /> <b>Database Services API seems to be offline</b>
-        </ModalBody>
-        <ModalFooter>
-            <Button Color="Color.Info" Clicked="@databaseServicesNotificationRef.Hide">Got it</Button>
-        </ModalFooter>
-    </ModalContent>
-</Modal>
+    <Modal @ref="databaseServicesNotificationRef">
+        <ModalContent>
+            <ModalBody>
+                <Icon Name="IconName.InfoCircle" /> <b>Database Services API seems to be offline</b>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Info" Clicked="@databaseServicesNotificationRef.Hide">Got it</Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
 
-@code
+    @code
 {
-    Modal databaseServicesNotificationRef;
-    int pageSize = 50;
-    bool RefreshButtonDisabed;
+        Modal databaseServicesNotificationRef;
+        int pageSize = 50;
+        bool RefreshButtonDisabed;
 
-    DataGrid<HostModel> dataGrid;
-    List<HostModel> hostModels;
-    HostModel newHostToAdd = new HostModel();
+        DataGrid<HostModel> dataGrid;
+        List<HostModel> hostModels;
+        HostModel newHostToAdd = new HostModel();
 
-    protected override async Task OnInitializedAsync()
-    {
-        await ReloadTable();
-    }
-
-    string customFilterValue;
-    bool OnCustomFilter(HostModel model)
-    {
-        if (string.IsNullOrEmpty(customFilterValue))
-            return true;
-
-        return
-            model.Id.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
-            || model.HostIp.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
-            || model.HostServicesAPISocketAddress.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
-            || model.IsActive.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
-    }
-
-    void OnSelectedRowChanged()
-    {
-        StateHasChanged();
-    }
-
-
-    async Task ReloadTable()
-    {
-        RefreshButtonDisabed = true;
-        // Update our Hosts list
-        try
+        protected override async Task OnInitializedAsync()
         {
-            IEnumerable<HostModel> getHostsResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHosts");
-            hostModels = new List<HostModel>(getHostsResponse);
+            await ReloadTable();
         }
-        catch (Exception e)
+
+        string customFilterValue;
+        bool OnCustomFilter(HostModel model)
         {
-            // DatabaseServicesAPI is probably offline. In that case MWF is probably not even being used right now
-            databaseServicesNotificationRef.Show();
+            if (string.IsNullOrEmpty(customFilterValue))
+                return true;
+
+            return
+                model.Id.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+                || model.HostIp.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+                || model.HostServicesAPISocketAddress.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true
+                || model.IsActive.ToString()?.Contains(customFilterValue, StringComparison.OrdinalIgnoreCase) == true;
+        }
+
+        void OnSelectedRowChanged()
+        {
+            StateHasChanged();
         }
 
 
+        async Task ReloadTable()
+        {
+            RefreshButtonDisabed = true;
+            // Update our Hosts list
+            try
+            {
+                IEnumerable<HostModel> getHostsResponse = await DatabaseServicesHttpClient.GetClient().GetFromJsonAsync<IEnumerable<HostModel>>(@"GetHosts");
+                hostModels = new List<HostModel>(getHostsResponse);
+            }
+            catch (Exception e)
+            {
+                // DatabaseServicesAPI is probably offline. In that case MWF is probably not even being used right now
+                databaseServicesNotificationRef.Show();
+            }
 
-        // always call StateHasChanged!
-        StateHasChanged();
-        RefreshButtonDisabed = false;
+
+
+            // always call StateHasChanged!
+            StateHasChanged();
+            RefreshButtonDisabed = false;
+        }
+
     }
-
-}
 
